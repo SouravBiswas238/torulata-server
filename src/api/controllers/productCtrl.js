@@ -7,8 +7,8 @@ export default class ProductCtrl {
     //Access : Public
     //Description :for adding the product
     addProduct = async (req, res) => {
-        let { name, price, category } = req.body;
-        if (!name || !price || !category) {
+        let { name, price, category, imageUrl } = req.body;
+        if (!name || !price || !category || !imageUrl) {
             return res.status(400).json({
                 "success": false,
                 "message": "Invalid input!"
@@ -16,7 +16,7 @@ export default class ProductCtrl {
         }
 
         try {
-            let newProduct = await Product.create({ name: name, price: Number(price), category: category });
+            let newProduct = await Product.create({ name: name, price: Number(price), category: category, imageUrl: imageUrl });
             return res.json({
                 "success": true,
                 "message": "Product Added",
