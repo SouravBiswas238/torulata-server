@@ -52,9 +52,9 @@ export default class ProductCtrl {
     //Access : Public
     //Description :for fetching the product
 
-    getPrducts = async (req, res) => {
+    getProducts = async (req, res) => {
         try {
-            let products = Product.find({})
+            let products = await Product.find({})
             return res.json({
                 "success": true,
                 "message": "Product Retrived",
