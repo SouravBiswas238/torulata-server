@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 
 import connectDB from "./src/config/db.js";
 import properties from './src/config/properties.js';
-
+import productRouter from "./src/api/routes/ProductsRoute.js";
 const port = properties.PORT;
 const serverUrl = properties.SERVER_URL;
 
@@ -41,6 +41,10 @@ try {
 } catch (error) {
     console.log(error);
 }
+
+app.use("/api/v1/product", productRouter);
+
+
 app.get("/", (req, res) => {
     return res.send(`<h1>Running on Port : ${port}</h1>`);
 });
