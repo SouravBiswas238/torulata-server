@@ -33,7 +33,7 @@ const productSchema = new mongoose.Schema({
 
     },
     product_category: {
-        type: String,
+        type: [String], // update to accept an array of strings
         required: true
     },
     product_tags_english: {
