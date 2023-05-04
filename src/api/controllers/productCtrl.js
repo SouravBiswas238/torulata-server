@@ -69,4 +69,29 @@ export default class ProductCtrl {
 
         }
     }
+    deleteProducts = async (req, res) => {
+        try {
+            const productId = req.body.productId;
+            console.log(productId)
+
+            if (!productId) {
+                return res.status(400).send({ error: 'productId is required' });
+            }
+
+            const deletedProduct = await Product.findOneAndDelete({ _id: productId });
+
+            if (!deletedProduct) {
+                return res.status(404).send({ error: 'Product not found' });
+            }
+
+            return res.send({ success: 'Product deleted successfully' });
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                "success": false,
+                "message": "Server Error!"
+            });
+
+        }
+    }
 }
