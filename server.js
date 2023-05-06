@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import connectDB from "./src/config/db.js";
 import properties from './src/config/properties.js';
 import productRouter from "./src/api/routes/ProductsRoute.js";
+import adminRouter from "./src/api/routes/adminsRoute.js";
 const port = properties.PORT;
 const serverUrl = properties.SERVER_URL;
 
@@ -43,6 +44,7 @@ try {
 }
 
 app.use("/api/v1/product", productRouter);
+app.use("/admin", adminRouter);
 
 
 app.get("/", (req, res) => {
