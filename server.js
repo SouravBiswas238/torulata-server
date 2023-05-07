@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import connectDB from "./src/config/db.js";
 import properties from './src/config/properties.js';
 import productRouter from "./src/api/routes/ProductsRoute.js";
+import adminRouter from "./src/api/routes/adminsRoute.js";
 const port = properties.PORT;
 const serverUrl = properties.SERVER_URL;
 
@@ -17,6 +18,7 @@ var allowed_origins = [
     "https://localhost:3001",
     "https://localhost:3002",
     "http://localhost:5173",
+    "http://127.0.0.1:5173",
 
     "chrome-extension://pddljdmihkpdfpkgmbhdomeeifpklgnm",
 ];
@@ -45,6 +47,7 @@ try {
 }
 
 app.use("/api/v1/product", productRouter);
+app.use("/admin", adminRouter);
 
 
 app.get("/", (req, res) => {

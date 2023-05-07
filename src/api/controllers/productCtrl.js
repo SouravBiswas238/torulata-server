@@ -47,7 +47,7 @@ export default class ProductCtrl {
     }
 
 
-    //API : /api/v1/product/getProducts
+    //API : /api/v1/product/fetchProducts
     //Method : get
     //Access : Public
     //Description :for fetching the product
@@ -60,6 +60,54 @@ export default class ProductCtrl {
                 "message": "Product Retrived",
                 "data": products
             })
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                "success": false,
+                "message": "Server Error!"
+            });
+
+        }
+    }
+    //API : /api/v1/product/singleProduct
+    //Method : get 
+    //Access : Public
+    //Description :for fetching the product
+
+    getSingleProducts = async (req, res) => {
+        try {
+            const productId = req.body.productId;
+            console.log(productId)
+            let products = await Product.findOne({ _id: productId })
+            return res.json({
+                "success": true,
+                "message": "Product Retrived",
+                "data": products
+            })
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                "success": false,
+                "message": "Server Error!"
+            });
+
+        }
+    }
+
+    deleteProducts = async (req, res) => {
+        try {
+            const productId = req.body.productId;
+            if (!productId) {
+                return res.status(400).send({ error: 'productId is required' });
+            }
+
+            const deletedProduct = await Product.findOneAndDelete({ _id: productId });
+
+            if (!deletedProduct) {
+                return res.status(404).send({ error: 'Product not found' });
+            }
+
+            return res.send({ success: 'Product deleted successfully' });
         } catch (error) {
             console.log(error)
             return res.status(500).json({
