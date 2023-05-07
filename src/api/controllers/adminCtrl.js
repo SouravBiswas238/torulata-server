@@ -51,7 +51,7 @@ adminCtrl.rgeAdmin = async (req, res) => {
 //API : /admin/login
 //Method : Get
 //Access : no access needed
-//Description : login admin admin
+//Description : login admin
 adminCtrl.loginAdmin = async (req, res) => {
     const { email, password } = req?.body || {}
 
@@ -91,7 +91,7 @@ adminCtrl.loginAdmin = async (req, res) => {
         }
 
     } catch (error) {
-        console.log("find email by admin", error.message);
+        console.log("login admin", error.message);
         return res.status(500).json({
             "success": false,
             "message": "internal server error!"
@@ -104,10 +104,90 @@ adminCtrl.loginAdmin = async (req, res) => {
 //Method : PUT
 //Access : admin access needed
 //Description : give admin login permission
+adminCtrl.giveAdminAccess = async (req, res) => {
+    const { email } = req?.body || {}
+
+    if (!email) {
+        return res.status(400).json({
+            "success": false,
+            "message": "Invalid input!"
+        });
+    }
+
+    try {
+        const { email } = req?.body || {}
+        const options = { new: true }
+        const find = { email }
+        const updateData = { status: true }
+
+        const skipData = {
+            password: 0,
+            date: 0,
+            __v: 0,
+            _id: 0,
+        }
+
+        const result = await Admin.findOneAndUpdate(find, updateData, options).select(skipData)
+
+        return res.status(200).json({
+            "success": true,
+            "message": "Make admin successfully!",
+            result
+        });
+
+    } catch (error) {
+        console.log("give admin login permission", error.message);
+        return res.status(500).json({
+            "success": false,
+            "message": "internal server error!"
+        });
+    }
+}
 
 
+//API : /admin/remove
+//Method : DELETE
+//Access : admin access needed
+//Description : delete admin 
+adminCtrl.giveAdminAccess = async (req, res) => {
+    const { email } = req?.body || {}
 
+    if (!email) {
+        return res.status(400).json({
+            "success": false,
+            "message": "Invalid input!"
+        });
+    }
 
+    try {
+        const { email } = req?.body || {}
+        const options = { new: true }
+        const find = { email }
+        const updateData = { status: true }
+
+        const skipData = {
+            password: 0,
+            date: 0,
+            __v: 0,
+            _id: 0,
+        }
+
+        const result = await Admin.findOneAndUpdate(find, updateData, options).select(skipData)
+
+        return res.status(500).json({
+            "success": true,
+            "message": "Make admin successfully!",
+            result
+        });
+
+    } catch (error) {
+        console.log("delete admin", error.message);
+        return res.status(500).json({
+            "success": false,
+            "message": "internal server error!"
+        });
+    }
+}
 
 
 export default adminCtrl
