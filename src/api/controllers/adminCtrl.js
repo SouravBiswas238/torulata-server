@@ -1,6 +1,7 @@
 // import createHash from "../../hooks/createHash.js";
 import Admin from "../models/adminsModels.js";
 import bcrypt from 'bcrypt'
+import jwt from "jsonwebtoken"
 
 
 let adminCtrl = {}
@@ -72,11 +73,14 @@ adminCtrl.loginAdmin = async (req, res) => {
 
         //admin login
         if (checkPassword) {
+            //create jwt token
+            const jwtToken = await jwt.sign({ email: adminEmail }, process.env.SECRET_HASH, { expiresIn: 30 })
+
             //admin login successfully
             return res.status(200).json({
                 "success": true,
                 "message": "Login Successful",
-                "accessToken": "4566223225332222"
+                "accessToken": jwtToken
             })
         } else {
             //admin login error
@@ -96,7 +100,10 @@ adminCtrl.loginAdmin = async (req, res) => {
 }
 
 
-
+//API : /admin/login/access
+//Method : PUT
+//Access : admin access needed
+//Description : give admin login permission
 
 
 

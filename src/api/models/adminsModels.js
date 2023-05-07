@@ -11,6 +11,14 @@ const adminsSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    status: {
+        type: Boolean,
+        default: false,
+    },
+    date: {
+        type: Date,
+        default: Date.now()
+    }
 })
 
 const admin = mongoose.model("admin", adminsSchema)
