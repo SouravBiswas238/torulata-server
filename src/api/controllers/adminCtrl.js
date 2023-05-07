@@ -149,7 +149,7 @@ adminCtrl.giveAdminAccess = async (req, res) => {
 //Method : DELETE
 //Access : admin access needed
 //Description : delete admin 
-adminCtrl.giveAdminAccess = async (req, res) => {
+adminCtrl.removeAdmin = async (req, res) => {
     const { email } = req?.body || {}
 
     if (!email) {
@@ -161,27 +161,27 @@ adminCtrl.giveAdminAccess = async (req, res) => {
 
     try {
         const { email } = req?.body || {}
-        const options = { new: true }
         const find = { email }
-        const updateData = { status: true }
 
-        const skipData = {
-            password: 0,
-            date: 0,
-            __v: 0,
-            _id: 0,
+        const result = await Admin.deleteOne(find)
+
+        const { acknowledged, deletedCount } = result || {}
+
+        if (acknowledged && deletedCount) {
+            return res.status(200).json({
+                "success": true,
+                "message": "delete admin successful!",
+                result
+            });
         }
-
-        const result = await Admin.findOneAndUpdate(find, updateData, options).select(skipData)
-
-        return res.status(500).json({
-            "success": true,
-            "message": "Make admin successfully!",
-            result
+        return res.status(404).json({
+            "success": false,
+            "message": "admin not exit!",
         });
 
+
     } catch (error) {
-        console.log("delete admin", error.message);
+        console.log("remove admin", error.message);
         return res.status(500).json({
             "success": false,
             "message": "internal server error!"
