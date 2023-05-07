@@ -2,6 +2,7 @@
 import Admin from "../models/adminsModels.js";
 import bcrypt from 'bcrypt'
 import jwt from "jsonwebtoken"
+import jwtVerify from "../../uttils/jwtVerify.js";
 
 
 let adminCtrl = {}
@@ -68,13 +69,21 @@ adminCtrl.loginAdmin = async (req, res) => {
         const adminData = await Admin.findOne({ email })
         const { email: adminEmail, password: adminPasswordHash } = adminData || {}
 
+
+        if (adminPasswordHash === null || adminPasswordHash === undefined) {
+            return res.status(404).json({
+                "success": false,
+                "message": "admin not exit",
+            })
+        }
+
         //check user password valid or not
         const checkPassword = await bcrypt.compare(password, adminPasswordHash)
 
         //admin login
         if (checkPassword) {
             //create jwt token
-            const jwtToken = await jwt.sign({ email: adminEmail }, process.env.SECRET_HASH, { expiresIn: 30 })
+            const jwtToken = await jwt.sign({ email: adminEmail }, process.env.SECRET_HASH, { expiresIn: 60 * 60 })
 
             //admin login successfully
             return res.status(200).json({
