@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 const adminsSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, "please fill name field"]
+        required: true
     },
     email: {
         type: String,
@@ -14,16 +14,18 @@ const adminsSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-
     },
     isVerify: {
         type: Boolean,
         default: false,
-        enum: [false]
+    },
+    mailVerifyHash: {
+        type: String,
+        default: null
     }
+
 }, { timestamps: true })
 
 const admin = mongoose.model("admin", adminsSchema)
-
 
 export default admin;

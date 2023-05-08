@@ -2,7 +2,7 @@
 import Admin from "../models/adminsModels.js";
 import bcrypt from 'bcrypt'
 import jwt from "jsonwebtoken"
-import jwtVerify from "../../uttils/jwtVerify.js";
+import crypto from 'crypto'
 import sentVerifyEmail from "../../uttils/sentVerifyEmail.js";
 
 
@@ -13,7 +13,6 @@ let adminCtrl = {}
 //Access : access with admin approval
 //Description : reg admin api
 adminCtrl.rgeAdmin = async (req, res) => {
-    console.log(req.body);
 
     const bodyObject = Object.keys(req.body);
     bodyObject.forEach((singleKey) => {
@@ -28,15 +27,21 @@ adminCtrl.rgeAdmin = async (req, res) => {
     try {
         const saltRounds = 10;
         const hash = await bcrypt.hash(req?.body?.password, saltRounds)
+        const mailVerifyHash = crypto.randomBytes(64).toString('hex')
 
+        // sent data database object model 
         const rgeData = {
+            name: req?.body?.name,
             email: req?.body?.email,
-            password: hash
+            password: hash,
+            mailVerifyHash
         }
 
         const newAdmin = await Admin.create(rgeData);
+
         //sent verify email 
-        await sentVerifyEmail(req.body.email)
+        await sentVerifyEmail({ email: req.body.email, mailVerifyHash })
+
         return res.status(200).json({
             "success": true,
             "message": "registration successful",
@@ -45,9 +50,17 @@ adminCtrl.rgeAdmin = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
+        const userAlreadyExist = error.message.includes("email_1 dup key")
+        if (userAlreadyExist) {
+            return res.status(409).json({
+                "success": false,
+                "message": "Admin already exist"
+            });
+        }
+
         return res.status(500).json({
             "success": false,
-            "message": "internal server error!"
+            "message": "internal server error  t!"
         });
     }
 }

@@ -1,10 +1,9 @@
 import nodemailer from "nodemailer";
+import sentVerifyMailFormate from "./sentVerifyMailFormate.js";
 
-const sentVerifyEmail = async (adminEmail) => {
+const sentVerifyEmail = async ({ email, mailVerifyHash }) => {
 
-
-
-
+    // create transport
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -13,24 +12,20 @@ const sentVerifyEmail = async (adminEmail) => {
         }
     });
 
+    // sent mail options
     const mailOptions = {
         from: process.env.NODEMAILER_APP_SENT_EMAIL,
-        to: adminEmail,
+        to: email,
         subject: 'Verify your email account',
-        text: 'Email content hear'
+        html: sentVerifyMailFormate(mailVerifyHash)
     };
 
     try {
-        const result = await transporter.sendMail(mailOptions)
-        console.log(result);
+        //sent mail hear
+        await transporter.sendMail(mailOptions)
     } catch (error) {
         console.log("sent mail", error.message)
-
     }
-
-
-
-
 
 }
 
