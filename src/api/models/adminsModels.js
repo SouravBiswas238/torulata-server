@@ -2,6 +2,10 @@ import mongoose from 'mongoose';
 
 
 const adminsSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: [true, "please fill name field"]
+    },
     email: {
         type: String,
         required: true,
@@ -9,17 +13,15 @@ const adminsSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: true,
+
     },
-    status: {
+    isVerify: {
         type: Boolean,
         default: false,
-    },
-    date: {
-        type: Date,
-        default: Date.now()
+        enum: [false]
     }
-})
+}, { timestamps: true })
 
 const admin = mongoose.model("admin", adminsSchema)
 

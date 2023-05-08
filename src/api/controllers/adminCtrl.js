@@ -3,6 +3,7 @@ import Admin from "../models/adminsModels.js";
 import bcrypt from 'bcrypt'
 import jwt from "jsonwebtoken"
 import jwtVerify from "../../uttils/jwtVerify.js";
+import sentVerifyEmail from "../../uttils/sentVerifyEmail.js";
 
 
 let adminCtrl = {}
@@ -12,6 +13,7 @@ let adminCtrl = {}
 //Access : access with admin approval
 //Description : reg admin api
 adminCtrl.rgeAdmin = async (req, res) => {
+    console.log(req.body);
 
     const bodyObject = Object.keys(req.body);
     bodyObject.forEach((singleKey) => {
@@ -33,6 +35,8 @@ adminCtrl.rgeAdmin = async (req, res) => {
         }
 
         const newAdmin = await Admin.create(rgeData);
+        //sent verify email 
+        await sentVerifyEmail(req.body.email)
         return res.status(200).json({
             "success": true,
             "message": "registration successful",
