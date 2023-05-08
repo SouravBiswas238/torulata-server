@@ -216,4 +216,54 @@ adminCtrl.removeAdmin = async (req, res) => {
 }
 
 
+//API : /admin/email-verify
+//Method : patch
+//Access : no access needed
+//Description : email verify 
+adminCtrl.verifyEmail = async (req, res) => {
+
+    const mailVerifyHash = req?.params?.hash
+
+    console.log("emailVerifyHash", mailVerifyHash);
+
+    try {
+        const query = { mailVerifyHash }
+        const updateData = {
+            isVerify: true,
+            mailVerifyHash: "",
+        }
+        const skipDataInResult = {
+            _id: 0,
+            email: 0,
+            password: 0,
+            mailVerifyHash: 0,
+            createdAt: 0,
+            updatedAt: 0,
+            __v: 0
+        }
+        const emailVerifyResult = await Admin.findOneAndUpdate(query, updateData, { new: true }).select(skipDataInResult)
+
+        if (emailVerifyResult !== null) {
+            return res.status(200).json({
+                "success": true,
+                "message": "Email verify successful",
+                result: emailVerifyResult
+            });
+        } else {
+            return res.status(404).json({
+                "success": false,
+                "message": "Op's Email verify failed!"
+            });
+        }
+    } catch (error) {
+        console.log("email-verify", error.message);
+        return res.status(500).json({
+            "success": false,
+            "message": "internal server error!"
+        });
+    }
+
+
+}
+
 export default adminCtrl
