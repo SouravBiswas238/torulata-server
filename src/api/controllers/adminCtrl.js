@@ -45,6 +45,8 @@ adminCtrl.rgeAdmin = async (req, res) => {
 
         const newAdmin = await Admin.create(rgeData);
 
+        await Admin.findOneAndUpdate({ email }, { resetPasswordOTP: null, isVerify: false })
+
         //sent verify email 
         await sentEmail(email, sentVerifyMailFormate(mailVerifyHash))
 
@@ -274,11 +276,11 @@ adminCtrl.verifyEmail = async (req, res) => {
 }
 
 
-//API : /admin/password-reset
+//API : /admin/password-reset-mail-sent
 //Method : patch
 //Access : no access needed
-//Description : password reset
-adminCtrl.passwordReset = async (req, res) => {
+//Description : password reset email sent
+adminCtrl.passwordResetMailSent = async (req, res) => {
 
     try {
         const resetPassEmail = req?.body?.email;
@@ -325,5 +327,49 @@ adminCtrl.passwordReset = async (req, res) => {
     }
 
 }
+
+
+//API : /admin/password-reset-mail-verify
+//Method : patch
+//Access : no access needed
+//Description : password reset email verify
+adminCtrl.passwordResetMailVerify = async (req, res) => {
+
+    try {
+        const { email, otp } = req?.params || {}
+
+        const findAdmin = await Admin.findOne({ email })
+        console.log(findAdmin);
+
+        if (findAdmin !== null && otp == findAdmin?.resetPasswordOTP) {
+            // admin find successfully
+
+            // removed old otp in database
+            await Admin.findOneAndUpdate({ email }, { resetPasswordOTP: null })
+
+            return res.status(200).json({
+                "success": true,
+                "message": "otp is valid",
+                "email": email
+            });
+        }
+
+        // admin find error or something
+        return res.status(404).json({
+            "success": false,
+            "message": "something wrong"
+        });
+
+
+    } catch (error) {
+        console.log("otp verify || ", error.message);
+        return res.status(500).json({
+            "success": false,
+            "message": "internal server error!"
+        });
+    }
+
+}
+
 
 export default adminCtrl
