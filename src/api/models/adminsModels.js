@@ -26,6 +26,10 @@ const adminsSchema = new mongoose.Schema({
     resetPasswordOTP: {
         type: Number,
         default: null
+    },
+    passwordRest: {
+        type: Boolean,
+        default: false,
     }
 
 }, { timestamps: true })

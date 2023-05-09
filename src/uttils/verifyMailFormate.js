@@ -1,6 +1,6 @@
 
 
-const sentVerifyMailFormate = (mailVerifyHash) => {
+const verifyMailFormate = (mailVerifyHash) => {
 
     console.log(mailVerifyHash);
 
@@ -425,4 +425,4 @@ const sentVerifyMailFormate = (mailVerifyHash) => {
 
 };
 
-export default sentVerifyMailFormate;
+export default verifyMailFormate;

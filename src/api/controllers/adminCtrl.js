@@ -5,8 +5,10 @@ import jwt from "jsonwebtoken"
 import crypto from 'crypto'
 import sentEmail from "../../uttils/sentEmail.js";
 import generateOTP from "../../uttils/generateOTP.js";
-import sentVerifyMailFormate from "../../uttils/sentVerifyMailFormate.js";
+import verifyMailFormate from "../../uttils/verifyMailFormate.js";
+import resetMailFormate from "../../uttils/resetMailFormate.js";
 
+const saltRounds = 10;
 
 let adminCtrl = {}
 
@@ -27,7 +29,7 @@ adminCtrl.rgeAdmin = async (req, res) => {
     })
 
     try {
-        const saltRounds = 10;
+
         const hash = await bcrypt.hash(req?.body?.password, saltRounds)
         const mailVerifyHash = crypto.randomBytes(64).toString('hex')
 
@@ -45,10 +47,11 @@ adminCtrl.rgeAdmin = async (req, res) => {
 
         const newAdmin = await Admin.create(rgeData);
 
-        await Admin.findOneAndUpdate({ email }, { resetPasswordOTP: null, isVerify: false })
+        // unusual activity proceed
+        await Admin.findOneAndUpdate({ email }, { resetPasswordOTP: null, isVerify: false, passwordRest: false })
 
-        //sent verify email 
-        await sentEmail(email, sentVerifyMailFormate(mailVerifyHash))
+        //sent verify email
+        await sentEmail(email, verifyMailFormate(mailVerifyHash))
 
 
         return res.status(200).json({
@@ -297,7 +300,7 @@ adminCtrl.passwordResetMailSent = async (req, res) => {
 
         if (result !== null) {
             console.log("result", result);
-            await sentEmail(resetPassEmail, sentVerifyMailFormate(OTP))
+            await sentEmail(resetPassEmail, resetMailFormate())
 
             // password validity time 5 minute
             setTimeout(async () => {
@@ -345,7 +348,7 @@ adminCtrl.passwordResetMailVerify = async (req, res) => {
             // admin find successfully
 
             // removed old otp in database
-            await Admin.findOneAndUpdate({ email }, { resetPasswordOTP: null })
+            await Admin.findOneAndUpdate({ email }, { resetPasswordOTP: null, passwordRest: true })
 
             return res.status(200).json({
                 "success": true,
@@ -371,5 +374,43 @@ adminCtrl.passwordResetMailVerify = async (req, res) => {
 
 }
 
+
+//API : /admin/password-update
+//Method : patch
+//Access : no access needed
+//Description : password update
+adminCtrl.passwordUpdate = async (req, res) => {
+
+    try {
+
+        const { email } = req?.params || {}
+        const newPassword = req?.body?.password
+        const hash = await bcrypt.hash(newPassword, saltRounds)
+
+        const findAdmin = await Admin.findOne({ email })
+
+        if (findAdmin !== null && findAdmin?.passwordRest) {
+            // password update
+            await Admin.findOneAndUpdate({ email }, { password: hash, passwordRest: false })
+            return res.status(200).json({
+                "success": true,
+                "message": "update password successful",
+            });
+        }
+        return res.status(500).json({
+            "success": false,
+            "message": "smutting is wrong",
+        });
+
+
+    } catch (error) {
+        return res.status(500).json({
+            "success": false,
+            "message": "internal server error!"
+        });
+    }
+
+
+}
 
 export default adminCtrl
