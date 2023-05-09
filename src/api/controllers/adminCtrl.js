@@ -3,7 +3,9 @@ import Admin from "../models/adminsModels.js";
 import bcrypt from 'bcrypt'
 import jwt from "jsonwebtoken"
 import crypto from 'crypto'
-import sentVerifyEmail from "../../uttils/sentVerifyEmail.js";
+import sentEmail from "../../uttils/sentEmail.js";
+import generateOTP from "../../uttils/generateOTP.js";
+import sentVerifyMailFormate from "../../uttils/sentVerifyMailFormate.js";
 
 
 let adminCtrl = {}
@@ -29,10 +31,14 @@ adminCtrl.rgeAdmin = async (req, res) => {
         const hash = await bcrypt.hash(req?.body?.password, saltRounds)
         const mailVerifyHash = crypto.randomBytes(64).toString('hex')
 
-        // sent data database object model 
+        // sent data database object model
+
+        const name = req?.body?.name
+        const email = req?.body?.email
+
         const rgeData = {
-            name: req?.body?.name,
-            email: req?.body?.email,
+            name,
+            email,
             password: hash,
             mailVerifyHash
         }
@@ -40,7 +46,8 @@ adminCtrl.rgeAdmin = async (req, res) => {
         const newAdmin = await Admin.create(rgeData);
 
         //sent verify email 
-        await sentVerifyEmail({ email: req.body.email, mailVerifyHash })
+        await sentEmail(email, sentVerifyMailFormate(mailVerifyHash))
+
 
         return res.status(200).json({
             "success": true,
@@ -263,6 +270,53 @@ adminCtrl.verifyEmail = async (req, res) => {
         });
     }
 
+
+}
+
+
+//API : /admin/password-reset
+//Method : patch
+//Access : no access needed
+//Description : password reset
+adminCtrl.passwordReset = async (req, res) => {
+
+    try {
+        const resetPassEmail = req?.body?.email;
+
+        // generate Otp 
+        const OTP = Number(generateOTP())
+
+        const find = { email: resetPassEmail }
+        const resetPasswordOTP = { resetPasswordOTP: OTP }
+        const options = { new: true }
+
+        // check valid admin  
+        const result = await Admin.findOneAndUpdate(find, resetPasswordOTP, options)
+
+        if (result !== null) {
+            console.log("result", result);
+            await sentEmail(resetPassEmail, sentVerifyMailFormate(OTP))
+
+            return res.status(200).json({
+                "success": true,
+                "message": "Reset mail sent"
+            });
+        }
+
+        return res.status(404).json({
+            "success": false,
+            "message": "Wrong email try again"
+        });
+
+    } catch (error) {
+
+        console.log("password reset || ", error.message);
+        return res.status(500).json({
+            "success": false,
+            "message": "internal server error!"
+        });
+
+    }
 
 }
 

@@ -1,7 +1,6 @@
 import nodemailer from "nodemailer";
-import sentVerifyMailFormate from "./sentVerifyMailFormate.js";
 
-const sentVerifyEmail = async ({ email, mailVerifyHash }) => {
+const sentEmail = async (email, mailFormate) => {
 
     // create transport
     const transporter = nodemailer.createTransport({
@@ -17,7 +16,7 @@ const sentVerifyEmail = async ({ email, mailVerifyHash }) => {
         from: process.env.NODEMAILER_APP_SENT_EMAIL,
         to: email,
         subject: 'Verify your email account',
-        html: sentVerifyMailFormate(mailVerifyHash)
+        html: mailFormate
     };
 
     try {
@@ -29,4 +28,4 @@ const sentVerifyEmail = async ({ email, mailVerifyHash }) => {
 
 }
 
-export default sentVerifyEmail
+export default sentEmail

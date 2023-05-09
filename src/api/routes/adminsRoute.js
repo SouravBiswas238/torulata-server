@@ -9,5 +9,6 @@ router.route('/login').get(adminCtrl.loginAdmin);
 router.route('/give-admin-access').patch(adminCtrl.giveAdminAccess);
 router.route('/remove').delete(jwtVerify, adminCtrl.removeAdmin);
 router.route('/email-verify/:hash').patch(adminCtrl.verifyEmail);
+router.route('/password-reset').patch(adminCtrl.passwordReset);
 
 export default router;

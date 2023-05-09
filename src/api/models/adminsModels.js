@@ -22,6 +22,10 @@ const adminsSchema = new mongoose.Schema({
     mailVerifyHash: {
         type: String,
         default: null
+    },
+    resetPasswordOTP: {
+        type: Number,
+        default: null
     }
 
 }, { timestamps: true })
