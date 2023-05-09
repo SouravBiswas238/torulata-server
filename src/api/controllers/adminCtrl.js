@@ -297,9 +297,15 @@ adminCtrl.passwordReset = async (req, res) => {
             console.log("result", result);
             await sentEmail(resetPassEmail, sentVerifyMailFormate(OTP))
 
+            // password validity time 5 minute
+            setTimeout(async () => {
+                await Admin.findOneAndUpdate(find, { resetPasswordOTP: null })
+            }, 300000);
+
             return res.status(200).json({
                 "success": true,
-                "message": "Reset mail sent"
+                "message": "Reset mail sent",
+                "exp": "5 minute"
             });
         }
 
