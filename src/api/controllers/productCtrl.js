@@ -106,9 +106,10 @@ export default class ProductCtrl {
 
         }
         try {
-            await Sequence.deleteOne({ _id: productId });
+            await Product.deleteOne({ _id: productId });
             res.json({ 'success': true, 'message': 'Product Deleted!' });
         } catch (error) {
+            console.log(error)
             res.json({ 'success': false, 'message': 'Technical Issue in server!' });
         }
 
