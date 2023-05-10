@@ -77,8 +77,9 @@ export default class ProductCtrl {
     getSingleProducts = async (req, res) => {
         try {
             const productId = req.body.productId;
-            console.log(productId)
+
             let products = await Product.findOne({ _id: productId })
+
             return res.json({
                 "success": true,
                 "message": "Product Retrived",
@@ -94,27 +95,24 @@ export default class ProductCtrl {
         }
     }
 
+
+
+
     deleteProducts = async (req, res) => {
-        try {
-            const productId = req.body.productId;
-            if (!productId) {
-                return res.status(400).send({ error: 'productId is required' });
-            }
-
-            const deletedProduct = await Product.findOneAndDelete({ _id: productId });
-
-            if (!deletedProduct) {
-                return res.status(404).send({ error: 'Product not found' });
-            }
-
-            return res.send({ success: 'Product deleted successfully' });
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json({
-                "success": false,
-                "message": "Server Error!"
-            });
+        let productId = req.params.productId;
+        console.log(productId)
+        if (!productId) {
+            res.json({ 'message': 'ProductId not recive' });
 
         }
+        try {
+            await Sequence.deleteOne({ _id: productId });
+            res.json({ 'success': true, 'message': 'Product Deleted!' });
+        } catch (error) {
+            res.json({ 'success': false, 'message': 'Technical Issue in server!' });
+        }
+
     }
+
+
 }
