@@ -100,9 +100,58 @@ export default class ProductCtrl {
     }
 
 
+    // search product  get search result by query {sourav}
+    //API : /api/v1/product/singleProduct
+    //Method : get 
+    //Access : Public
+    //Description :for searching the product
+
+    getSearchProduct = async (req, res) => {
+        try {
+            const keyword = req.query.search
+                ? {
+                    $or: [
+                        {
+                            product_category: {
+                                $regex: req.query.search,
+                                $ne: req?.decoded?.Product?.product_category,
+                                $options: 'i',
+                            },
+                        },
+                        {
+                            product_tags_english: {
+                                $regex: req.query.search,
+                                $ne: req?.decoded?.Product?.product_tags_english,
+                                $options: 'i',
+                            },
+                        },
+                        {
+                            product_tags_bangla: {
+                                $regex: req.query.search,
+                                $ne: req?.decoded?.singleProduct?.product_tags_bangla,
+                                $options: 'i',
+                            },
+                        },
+                        // { email: { $ne: req?.decoded?.userData?.email } },
+                    ],
+                }
+                : {};
+            console.log(req.query.search)
+            console.log(keyword)
+            const singleProduct = await Product.find(keyword);
+            res.send(singleProduct);
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                "success": false,
+                "message": "Server Error!"
+            });
+
+        }
+    }
 
 
-
+    // delete api takes product id by params
     deleteProducts = async (req, res) => {
         let productId = req.params.productId;
         console.log(productId)
