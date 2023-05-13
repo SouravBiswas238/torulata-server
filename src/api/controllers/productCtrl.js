@@ -7,12 +7,8 @@ export default class ProductCtrl {
     //Description :for adding the product
     addProduct = async (req, res) => {
 
-
-
         let { product_title, product_price, product_category, product_images, product_info, product_tags_english, product_tags_bangla, } = req.body;
         // @ts-ignore
-
-
 
         if (!product_title || !product_price || !product_category || !product_images || !product_info, !product_tags_english, !product_tags_bangla) {
             return res.status(400).json({
@@ -76,13 +72,13 @@ export default class ProductCtrl {
 
     getSingleProducts = async (req, res) => {
         try {
-            const productId = req.body.productId;
+            const productId = req.params.productId;
             console.log(productId)
-            let products = await Product.findOne({ _id: productId })
+            let product = await Product.findOne({ _id: productId })
             return res.json({
                 "success": true,
                 "message": "Product Retrived",
-                "data": products
+                "data": product
             })
         } catch (error) {
             console.log(error)
@@ -94,27 +90,25 @@ export default class ProductCtrl {
         }
     }
 
+
+
+
     deleteProducts = async (req, res) => {
-        try {
-            const productId = req.body.productId;
-            if (!productId) {
-                return res.status(400).send({ error: 'productId is required' });
-            }
-
-            const deletedProduct = await Product.findOneAndDelete({ _id: productId });
-
-            if (!deletedProduct) {
-                return res.status(404).send({ error: 'Product not found' });
-            }
-
-            return res.send({ success: 'Product deleted successfully' });
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json({
-                "success": false,
-                "message": "Server Error!"
-            });
+        let productId = req.params.productId;
+        console.log(productId)
+        if (!productId) {
+            res.json({ 'message': 'ProductId not recive' });
 
         }
+        try {
+            await Product.deleteOne({ _id: productId });
+            res.json({ 'success': true, 'message': 'Product Deleted!' });
+        } catch (error) {
+            console.log(error)
+            res.json({ 'success': false, 'message': 'Technical Issue in server!' });
+        }
+
     }
+
+
 }
