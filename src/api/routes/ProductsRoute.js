@@ -8,6 +8,6 @@ const productCtrl = new ProductCtrl();
 router.route('/addProduct').post(productCtrl.addProduct);
 router.route('/deleteProduct/:productId').delete(productCtrl.deleteProducts);
 router.route('/fetchProducts').get(productCtrl.getProducts);
-router.route('/singleProduct').get(productCtrl.getSingleProducts);
+router.route('/singleProduct/:id').get(productCtrl.getSingleProducts);
 
 export default router;

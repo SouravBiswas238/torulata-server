@@ -91,18 +91,22 @@ adminCtrl.loginAdmin = async (req, res) => {
             "message": "Invalid input!"
         });
     }
-
-
     try {
         //find email by admin
         const adminData = await Admin.findOne({ email })
-        const { email: adminEmail, password: adminPasswordHash } = adminData || {}
+        const { email: adminEmail, password: adminPasswordHash, isVerify, name } = adminData || {}
 
 
         if (adminPasswordHash === null || adminPasswordHash === undefined) {
             return res.status(404).json({
                 "success": false,
                 "message": "admin not exit",
+            })
+        }
+        if (!isVerify) {
+            return res.status(401).json({
+                "success": false,
+                "message": "Email not verify",
             })
         }
 
@@ -118,7 +122,11 @@ adminCtrl.loginAdmin = async (req, res) => {
             return res.status(200).json({
                 "success": true,
                 "message": "Login Successful",
-                "accessToken": jwtToken
+                "result": {
+                    "accessToken": jwtToken,
+                    "name": name,
+                    "email": adminEmail
+                }
             })
         } else {
             //admin login error

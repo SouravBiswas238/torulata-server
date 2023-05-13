@@ -4,7 +4,7 @@ import jwtVerify from '../../uttils/jwtVerify.js';
 
 const router = express.Router();
 
-router.route('/login').get(adminCtrl.loginAdmin);
+router.route('/login').patch(adminCtrl.loginAdmin);
 router.route('/register').post(adminCtrl.rgeAdmin);
 router.route('/remove').delete(jwtVerify, adminCtrl.removeAdmin);
 router.route('/email-verify/:hash').patch(adminCtrl.verifyEmail);
