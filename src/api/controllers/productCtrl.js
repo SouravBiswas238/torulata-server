@@ -7,12 +7,8 @@ export default class ProductCtrl {
     //Description :for adding the product
     addProduct = async (req, res) => {
 
-
-
         let { product_title, product_price, product_category, product_images, product_info, product_tags_english, product_tags_bangla, } = req.body;
         // @ts-ignore
-
-
 
         if (!product_title || !product_price || !product_category || !product_images || !product_info, !product_tags_english, !product_tags_bangla) {
             return res.status(400).json({
@@ -76,14 +72,13 @@ export default class ProductCtrl {
 
     getSingleProducts = async (req, res) => {
         try {
-            const productId = req.body.productId;
-
-            let products = await Product.findOne({ _id: productId })
-
+            const productId = req.params.productId;
+            console.log(productId)
+            let product = await Product.findOne({ _id: productId })
             return res.json({
                 "success": true,
                 "message": "Product Retrived",
-                "data": products
+                "data": product
             })
         } catch (error) {
             console.log(error)
