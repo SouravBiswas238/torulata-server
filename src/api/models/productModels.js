@@ -37,11 +37,11 @@ const productSchema = new mongoose.Schema({
         required: true
     },
     product_tags_english: {
-        type: [String],
+        type: [Object],
         required: true
     },
     product_tags_bangla: {
-        type: [String],
+        type: [Object],
         required: true
     },
     product_discount: {
