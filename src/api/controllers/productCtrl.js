@@ -76,14 +76,17 @@ export default class ProductCtrl {
 
     getSingleProducts = async (req, res) => {
         try {
-            const productId = req.body.productId;
-            console.log(productId)
-            let products = await Product.findOne({ _id: productId })
-            return res.json({
-                "success": true,
-                "message": "Product Retrived",
-                "data": products
-            })
+            const productId = req.params.id;
+            if (!productId) {
+                res.json({ "status": false, "message": "User Id is not received!" });
+            } else {
+                let products = await Product.findOne({ _id: productId })
+                if (products) {
+                    res.json({ "success": true, "data": products });
+                } else {
+                    res.json({ "status": false, "message": "User Id doesn't exist!" });
+                }
+            }
         } catch (error) {
             console.log(error)
             return res.status(500).json({
@@ -93,6 +96,7 @@ export default class ProductCtrl {
 
         }
     }
+
 
     deleteProducts = async (req, res) => {
         try {
