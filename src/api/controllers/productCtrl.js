@@ -73,7 +73,11 @@ export default class ProductCtrl {
     getSingleProducts = async (req, res) => {
         try {
             const productId = req.params.productId;
-            console.log(productId)
+            if (!productId) {
+                return res.json({
+                    message: 'product Id not recive'
+                })
+            }
             let product = await Product.findOne({ _id: productId })
             return res.json({
                 "success": true,
@@ -89,6 +93,7 @@ export default class ProductCtrl {
 
         }
     }
+
 
 
 
