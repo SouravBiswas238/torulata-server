@@ -43,6 +43,62 @@ export default class ProductCtrl {
     }
 
 
+    updateProduct = async (req, res) => {
+
+        const productId = req.params.productId;
+        const { product_title, product_price, product_category, product_images, product_info, product_tags_english, product_tags_bangla } = req.body;
+
+        if (!product_title || !product_price || !product_category || !product_images || !product_info || !product_tags_english || !product_tags_bangla) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid input!"
+            });
+        }
+
+        try {
+            const updatedProduct = await Product.findByIdAndUpdate(
+                productId,
+                {
+                    product_title: product_title,
+                    product_price: product_price,
+                    product_category: product_category,
+                    product_images: product_images,
+                    product_info: product_info,
+                    product_tags_english: product_tags_english,
+                    product_tags_bangla: product_tags_bangla
+                },
+                { new: true }
+            );
+
+            if (!updatedProduct) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Product not found"
+                });
+            }
+
+            return res.json({
+                success: true,
+                message: "Product updated",
+                product: updatedProduct
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                success: false,
+                message: "Server Error!"
+            });
+        }
+    }
+
+
+
+
+
+
+
+
+
     //API : /api/v1/product/fetchProducts
     //Method : get
     //Access : Public
