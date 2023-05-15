@@ -7,12 +7,8 @@ export default class ProductCtrl {
     //Description :for adding the product
     addProduct = async (req, res) => {
 
-
-
         let { product_title, product_price, product_category, product_images, product_info, product_tags_english, product_tags_bangla, } = req.body;
         // @ts-ignore
-
-
 
         if (!product_title || !product_price || !product_category || !product_images || !product_info, !product_tags_english, !product_tags_bangla) {
             return res.status(400).json({
@@ -47,6 +43,62 @@ export default class ProductCtrl {
     }
 
 
+    updateProduct = async (req, res) => {
+
+        const productId = req.params.productId;
+        const { product_title, product_price, product_category, product_images, product_info, product_tags_english, product_tags_bangla } = req.body;
+
+        if (!product_title || !product_price || !product_category || !product_images || !product_info || !product_tags_english || !product_tags_bangla) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid input!"
+            });
+        }
+
+        try {
+            const updatedProduct = await Product.findByIdAndUpdate(
+                productId,
+                {
+                    product_title: product_title,
+                    product_price: product_price,
+                    product_category: product_category,
+                    product_images: product_images,
+                    product_info: product_info,
+                    product_tags_english: product_tags_english,
+                    product_tags_bangla: product_tags_bangla
+                },
+                { new: true }
+            );
+
+            if (!updatedProduct) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Product not found"
+                });
+            }
+
+            return res.json({
+                success: true,
+                message: "Product updated",
+                product: updatedProduct
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                success: false,
+                message: "Server Error!"
+            });
+        }
+    }
+
+
+
+
+
+
+
+
+
     //API : /api/v1/product/fetchProducts
     //Method : get
     //Access : Public
@@ -76,19 +128,18 @@ export default class ProductCtrl {
 
     getSingleProducts = async (req, res) => {
         try {
-
-            const productId = req.params.id;
+            const productId = req.params.productId;
             if (!productId) {
-                res.json({ "status": false, "message": "User Id is not received!" });
-            } else {
-                let products = await Product.findOne({ _id: productId })
-                if (products) {
-                    res.json({ "success": true, "data": products });
-                } else {
-                    res.json({ "status": false, "message": "User Id doesn't exist!" });
-                }
+                return res.json({
+                    message: 'product Id not recive'
+                })
             }
-
+            let product = await Product.findOne({ _id: productId })
+            return res.json({
+                "success": true,
+                "message": "Product Retrived",
+                "data": product
+            })
         } catch (error) {
             console.log(error)
             return res.status(500).json({
@@ -100,9 +151,63 @@ export default class ProductCtrl {
     }
 
 
+    // search product  get search result by query {sourav}
+    //API : /api/v1/product/singleProduct
+    //Method : get 
+    //Access : Public
+    //Description :for searching the product
+
+    getSearchProduct = async (req, res) => {
+        try {
+            const keyword = req.query.search
+                ? {
+                    $or: [
+                        {
+                            product_category: {
+                                $regex: req.query.search,
+                                $ne: req?.decoded?.Product.product_category,
+                                $options: 'i',
+                            },
+                        },
+                        {
+                            product_title: {
+                                $regex: req.query.search,
+                                $ne: req?.decoded?.Product.product_title,
+                                $options: 'i',
+                            },
+                        },
+                        {
+                            product_tags_english: {
+                                $regex: req.query.search,
+                                $ne: req?.decoded?.Product.product_tags_english,
+                                $options: 'i',
+                            },
+                        },
+                        {
+                            product_tags_bangla: {
+                                $regex: req.query.search,
+                                $ne: req?.decoded?.singleProduct.product_tags_bangla,
+                                $options: 'i',
+                            },
+                        },
+                    ],
+                }
+                : {};
+
+            const singleProduct = await Product.find(keyword);
+            res.send(singleProduct);
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                "success": false,
+                "message": "Server Error!"
+            });
+
+        }
+    }
 
 
-
+    // delete api takes product id by params
     deleteProducts = async (req, res) => {
         let productId = req.params.productId;
         console.log(productId)
