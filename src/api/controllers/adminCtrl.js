@@ -295,6 +295,7 @@ adminCtrl.passwordResetMailSent = async (req, res) => {
 
     try {
         const resetPassEmail = req?.body?.email;
+        console.log(resetPassEmail);
 
         // generate Otp 
         const OTP = Number(generateOTP())
@@ -307,8 +308,7 @@ adminCtrl.passwordResetMailSent = async (req, res) => {
         const result = await Admin.findOneAndUpdate(find, resetPasswordOTP, options)
 
         if (result !== null) {
-            console.log("result", result);
-            await sentEmail(resetPassEmail, resetMailFormate())
+            await sentEmail(resetPassEmail, resetMailFormate(OTP))
 
             // password validity time 5 minute
             setTimeout(async () => {
@@ -363,6 +363,11 @@ adminCtrl.passwordResetMailVerify = async (req, res) => {
                 "message": "otp is valid",
                 "email": email
             });
+        } else {
+            return res.status(404).json({
+                "success": false,
+                "message": "OTP time expired",
+            });
         }
 
         // admin find error or something
@@ -390,10 +395,8 @@ adminCtrl.passwordResetMailVerify = async (req, res) => {
 adminCtrl.passwordUpdate = async (req, res) => {
 
     try {
-
-        const { email } = req?.params || {}
-        const newPassword = req?.body?.password
-        const hash = await bcrypt.hash(newPassword, saltRounds)
+        const { password, email } = req?.body
+        const hash = await bcrypt.hash(password, saltRounds)
 
         const findAdmin = await Admin.findOne({ email })
 

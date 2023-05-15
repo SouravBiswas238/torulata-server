@@ -1,8 +1,8 @@
 
-const resetMailFormate = () => {
+const resetMailFormate = (otp) => {
 
 
-    return `
+  return `
     <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -492,6 +492,7 @@ const resetMailFormate = () => {
                     <td class="content-cell">
                       <div class="f-fallback">
                         <h1>Hi {{name}},</h1>
+                        <h1>${otp}</h1>
                         <p>
                           You recently requested to reset your password for your
                           [Product Name] account. Use the button below to reset
