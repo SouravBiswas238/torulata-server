@@ -114,30 +114,35 @@ export default class ProductCtrl {
                         {
                             product_category: {
                                 $regex: req.query.search,
-                                $ne: req?.decoded?.Product?.product_category,
+                                $ne: req?.decoded?.Product.product_category,
+                                $options: 'i',
+                            },
+                        },
+                        {
+                            product_title: {
+                                $regex: req.query.search,
+                                $ne: req?.decoded?.Product.product_title,
                                 $options: 'i',
                             },
                         },
                         {
                             product_tags_english: {
                                 $regex: req.query.search,
-                                $ne: req?.decoded?.Product?.product_tags_english,
+                                $ne: req?.decoded?.Product.product_tags_english,
                                 $options: 'i',
                             },
                         },
                         {
                             product_tags_bangla: {
                                 $regex: req.query.search,
-                                $ne: req?.decoded?.singleProduct?.product_tags_bangla,
+                                $ne: req?.decoded?.singleProduct.product_tags_bangla,
                                 $options: 'i',
                             },
                         },
-                        // { email: { $ne: req?.decoded?.userData?.email } },
                     ],
                 }
                 : {};
-            console.log(req.query.search)
-            console.log(keyword)
+
             const singleProduct = await Product.find(keyword);
             res.send(singleProduct);
         } catch (error) {
