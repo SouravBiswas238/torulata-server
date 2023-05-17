@@ -90,6 +90,7 @@ export default class ProductCtrl {
             });
         }
     }
+
     //API : /api/v1/product/fetchProducts
     //Method : get
     //Access : Public
@@ -98,9 +99,9 @@ export default class ProductCtrl {
     getProducts = async (req, res) => {
         try {
             let products = await Product.find({})
-            return res.json({
+            return res.status(200).json({
                 "success": true,
-                "message": "Product Retrived",
+                "message": "Product Retrieved",
                 "data": products
             })
         } catch (error) {
@@ -179,6 +180,7 @@ export default class ProductCtrl {
     //Description :for searching the product
 
     getSearchProduct = async (req, res) => {
+        console.log(req.query);
         try {
             const keyword = req.query.search
                 ? {
@@ -198,14 +200,14 @@ export default class ProductCtrl {
                             },
                         },
                         {
-                            product_tags_english: {
+                            'product_tags_english.tag': {
                                 $regex: req.query.search,
                                 $ne: req?.decoded?.Product.product_tags_english,
                                 $options: 'i',
                             },
                         },
                         {
-                            product_tags_bangla: {
+                            'product_tags_bangla.tag': {
                                 $regex: req.query.search,
                                 $ne: req?.decoded?.singleProduct.product_tags_bangla,
                                 $options: 'i',
@@ -215,8 +217,12 @@ export default class ProductCtrl {
                 }
                 : {};
 
-            const singleProduct = await Product.find(keyword);
-            res.send(singleProduct);
+            const searchProduct = await Product.find(keyword);
+            res.status(200).json({
+                "success": true,
+                "message": "successful",
+                "data": searchProduct
+            });
         } catch (error) {
             console.log(error)
             return res.status(500).json({

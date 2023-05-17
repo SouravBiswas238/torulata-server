@@ -11,6 +11,8 @@ router.route('/deleteProduct/:productId').delete(productCtrl.deleteProducts);
 router.route('/fetchProducts').get(productCtrl.getProducts);
 router.route('/findManyById/:productArr').get(productCtrl.findManyById);
 
+router.route('/get-search-product/search').get(productCtrl.getSearchProduct);
+
 router.route('/singleProduct/:productId').get(productCtrl.getSingleProducts);
 router.route('/getSearchProduct/:search').get(productCtrl.getSearchProduct);
 
