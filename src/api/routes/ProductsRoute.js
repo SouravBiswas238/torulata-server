@@ -10,7 +10,7 @@ router.route('/updateProduct/:productId').put(productCtrl.updateProduct);
 router.route('/deleteProduct/:productId').delete(productCtrl.deleteProducts);
 router.route('/fetchProducts').get(productCtrl.getProducts);
 
-router.route('/getSearchProduct/search').get(productCtrl.getSearchProduct);
+router.route('/get-search-product/search').get(productCtrl.getSearchProduct);
 
 router.route('/singleProduct/:productId').get(productCtrl.getSingleProducts);
 
