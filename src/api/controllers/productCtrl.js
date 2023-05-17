@@ -119,6 +119,13 @@ export default class ProductCtrl {
 
     findManyById = async (req, res) => {
         const ids = req.params.productArr.split(',');
+        if (!ids) {
+            return res.status(200).json({
+                "success": true,
+                "message": "Product Retrived",
+                "data": [],
+            })
+        }
         try {
             let products = await Product.find({ _id: ids })
             return res.json({
