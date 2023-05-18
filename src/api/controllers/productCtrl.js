@@ -177,14 +177,14 @@ export default class ProductCtrl {
                             },
                         },
                         {
-                            product_tags_english: {
+                            'product_tags_english.tag': {
                                 $regex: req.query.search,
                                 $ne: req?.decoded?.Product.product_tags_english,
                                 $options: 'i',
                             },
                         },
                         {
-                            product_tags_bangla: {
+                            'product_tags_bangla.tag': {
                                 $regex: req.query.search,
                                 $ne: req?.decoded?.singleProduct.product_tags_bangla,
                                 $options: 'i',
@@ -194,17 +194,29 @@ export default class ProductCtrl {
                 }
                 : {};
 
-            const singleProduct = await Product.find(keyword);
-            res.send(singleProduct);
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json({
-                "success": false,
-                "message": "Server Error!"
+            const products = await Product.find(keyword);
+
+            // Extract tag names from the product tags
+            const productsWithTags = products.map((product) => {
+                const englishTagNames = product.product_tags_english.map((tag) => tag.tag);
+                const banglaTagNames = product.product_tags_bangla.map((tag) => tag.tag);
+                return {
+                    ...product.toObject(),
+                    product_tags_english: englishTagNames,
+                    product_tags_bangla: banglaTagNames,
+                };
             });
 
+            res.send(productsWithTags);
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                success: false,
+                message: 'Server Error!',
+            });
         }
-    }
+    };
+
 
 
     // delete api takes product id by params
