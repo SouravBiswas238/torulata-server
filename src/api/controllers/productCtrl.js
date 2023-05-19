@@ -95,14 +95,6 @@ export default class ProductCtrl {
         }
     }
 
-
-
-
-
-
-
-
-
     //API : /api/v1/product/fetchProducts
     //Method : get
     //Access : Public
@@ -111,9 +103,9 @@ export default class ProductCtrl {
     getProducts = async (req, res) => {
         try {
             let products = await Product.find({})
-            return res.json({
+            return res.status(200).json({
                 "success": true,
-                "message": "Product Retrived",
+                "message": "Product Retrieved",
                 "data": products
             })
         } catch (error) {
@@ -162,6 +154,7 @@ export default class ProductCtrl {
     //Description :for searching the product
 
     getSearchProduct = async (req, res) => {
+        console.log(req.query);
         try {
             const keyword = req.query.search
                 ? {
@@ -198,20 +191,12 @@ export default class ProductCtrl {
                 }
                 : {};
 
-            const products = await Product.find(keyword);
-
-            // Extract tag names from the product tags
-            const productsWithTags = products.map((product) => {
-                const englishTagNames = product.product_tags_english.map((tag) => tag.tag);
-                const banglaTagNames = product.product_tags_bangla.map((tag) => tag.tag);
-                return {
-                    ...product.toObject(),
-                    product_tags_english: englishTagNames,
-                    product_tags_bangla: banglaTagNames,
-                };
+            const searchProduct = await Product.find(keyword);
+            res.status(200).json({
+                "success": true,
+                "message": "successful",
+                "data": searchProduct
             });
-
-            res.send(productsWithTags);
         } catch (error) {
             console.log(error);
             return res.status(500).json({
