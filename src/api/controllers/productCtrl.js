@@ -113,6 +113,36 @@ export default class ProductCtrl {
 
         }
     }
+    //API : /api/v1/product/findManyById
+    //Method : get
+    //Access : Public
+    //Description :for fetching Many product by id
+
+    findManyById = async (req, res) => {
+        const ids = req.params.productArr.split(',');
+        if (!ids) {
+            return res.status(200).json({
+                "success": true,
+                "message": "Product Retrived",
+                "data": [],
+            })
+        }
+        try {
+            let products = await Product.find({ _id: ids })
+            return res.json({
+                "success": true,
+                "message": "Product Retrived",
+                "data": products
+            })
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                "success": false,
+                "message": "Server Error!"
+            });
+
+        }
+    }
     //API : /api/v1/product/singleProduct
     //Method : get 
     //Access : Public
