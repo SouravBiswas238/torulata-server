@@ -30,6 +30,10 @@ const adminsSchema = new mongoose.Schema({
     passwordRest: {
         type: Boolean,
         default: false,
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
     }
 
 }, { timestamps: true })

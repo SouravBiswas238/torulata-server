@@ -48,7 +48,7 @@ adminCtrl.rgeAdmin = async (req, res) => {
         const newAdmin = await Admin.create(rgeData);
 
         // unusual activity proceed
-        await Admin.findOneAndUpdate({ email }, { resetPasswordOTP: null, isVerify: false, passwordRest: false })
+        await Admin.findOneAndUpdate({ email }, { resetPasswordOTP: null, isVerify: false, passwordRest: false, isAdmin: false })
 
         //sent verify email
         await sentEmail(email, verifyMailFormate(mailVerifyHash))
@@ -94,7 +94,7 @@ adminCtrl.loginAdmin = async (req, res) => {
     try {
         //find email by admin
         const adminData = await Admin.findOne({ email })
-        const { email: adminEmail, password: adminPasswordHash, isVerify, name } = adminData || {}
+        const { email: adminEmail, password: adminPasswordHash, isVerify, name, isAdmin } = adminData || {}
 
 
         if (adminPasswordHash === null || adminPasswordHash === undefined) {
@@ -107,6 +107,12 @@ adminCtrl.loginAdmin = async (req, res) => {
             return res.status(401).json({
                 "success": false,
                 "message": "Email not verify",
+            })
+        }
+        if (!isAdmin) {
+            return res.status(401).json({
+                "success": false,
+                "message": "No admin access",
             })
         }
 
@@ -164,7 +170,7 @@ adminCtrl.giveAdminAccess = async (req, res) => {
         const { email } = req?.body || {}
         const options = { new: true }
         const find = { email }
-        const updateData = { status: true }
+        const updateData = { isAdmin: true }
 
         const skipData = {
             password: 0,
