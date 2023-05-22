@@ -120,6 +120,7 @@ export default class ProductCtrl {
 
     findManyById = async (req, res) => {
         const ids = req.params.productArr.split(',');
+        console.log(ids);
         if (!ids) {
             return res.status(200).json({
                 "success": true,
