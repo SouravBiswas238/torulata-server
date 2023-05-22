@@ -7,10 +7,10 @@ export default class ProductCtrl {
     //Description :for adding the product
     addProduct = async (req, res) => {
 
-        let { product_title, product_price, product_category, product_images, product_info, product_tags_english, product_tags_bangla, } = req.body;
+        let { product_title, product_price, product_care, product_category, product_discount, product_images, product_info, product_tags_english, product_tags_bangla, } = req.body;
         // @ts-ignore
 
-        if (!product_title || !product_price || !product_category || !product_images || !product_info, !product_tags_english, !product_tags_bangla) {
+        if (!product_title || !product_price || !product_care || !product_category || !product_images || !product_info, !product_tags_english, !product_tags_bangla) {
             return res.status(400).json({
                 "success": false,
                 "message": "Invalid input!"
@@ -19,6 +19,8 @@ export default class ProductCtrl {
 
         try {
             let newProduct = await Product.create({
+                product_care: product_care,
+                product_discount: product_discount,
                 product_title: product_title,
                 product_price: product_price,
                 product_category: product_category,
@@ -44,9 +46,9 @@ export default class ProductCtrl {
 
 
     updateProduct = async (req, res) => {
-
+        console.log(req.body)
         const productId = req.params.productId;
-        const { product_title, product_price, product_category, product_images, product_info, product_tags_english, product_tags_bangla } = req.body;
+        const { product_title, product_price, product_category, product_discount, product_images, product_info, product_tags_english, product_tags_bangla } = req.body;
 
         if (!product_title || !product_price || !product_category || !product_images || !product_info || !product_tags_english || !product_tags_bangla) {
             return res.status(400).json({
@@ -60,6 +62,8 @@ export default class ProductCtrl {
                 productId,
                 {
                     product_title: product_title,
+
+                    product_discount: product_discount,
                     product_price: product_price,
                     product_category: product_category,
                     product_images: product_images,
@@ -218,21 +222,29 @@ export default class ProductCtrl {
                 }
                 : {};
 
-            const searchProduct = await Product.find(keyword);
-            res.status(200).json({
-                "success": true,
-                "message": "successful",
-                "data": searchProduct
-            });
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json({
-                "success": false,
-                "message": "Server Error!"
+            const products = await Product.find(keyword);
+
+            // Extract tag names from the product tags
+            const productsWithTags = products.map((product) => {
+                const englishTagNames = product.product_tags_english.map((tag) => tag.tag);
+                const banglaTagNames = product.product_tags_bangla.map((tag) => tag.tag);
+                return {
+                    ...product.toObject(),
+                    product_tags_english: englishTagNames,
+                    product_tags_bangla: banglaTagNames,
+                };
             });
 
+            res.send(productsWithTags);
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                success: false,
+                message: 'Server Error!',
+            });
         }
-    }
+    };
+
 
 
     // delete api takes product id by params
