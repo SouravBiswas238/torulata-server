@@ -9,22 +9,10 @@ let odderCtrl = {}
 //Method : POST
 //Access : no access
 //Description : add odder api
-
-// Load the MaxMind database
-
 odderCtrl.addNewOdder = async (req, res) => {
 
 
     try {
-
-
-
-
-
-        console.log(req.ipAddress,
-            req.deviceName,
-            req.location);
-
         const odderData = req?.body
         const { product, address } = odderData
         const productIds = product.map(p => p._id)
@@ -56,8 +44,6 @@ odderCtrl.addNewOdder = async (req, res) => {
             products: newProductData
         }
 
-
-
         // save to database 
         const result = await Odder.create(newOdderData, { upsert: true })
 
@@ -76,6 +62,35 @@ odderCtrl.addNewOdder = async (req, res) => {
         });
     }
 }
+
+
+
+//API : /odder/
+//Method : POST
+//Access : no access
+//Description : add odder api
+odderCtrl.getAllOdder = async (req, res) => {
+
+    try {
+        const allData = await Odder.find()
+        return res.status(200).json({
+            "success": true,
+            "message": "get all odder data",
+            data: allData
+        });
+
+
+    } catch (error) {
+        console.log(error?.message);
+        return res.status(500).json({
+            "success": false,
+            "message": "internal server error  t!"
+        });
+    }
+
+
+}
+
 
 
 
