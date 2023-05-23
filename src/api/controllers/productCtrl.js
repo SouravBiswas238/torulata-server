@@ -148,6 +148,61 @@ export default class ProductCtrl {
 
         }
     }
+
+
+    //API : /api/v1/product/findByCategory || query accepted :  category => string, limit => number, skip => number 
+    //Method : get
+    //Access : Public
+    //Description :for fetching Many product by id
+
+    findProductBiCategory = async (req, res) => {
+        const category = req?.query?.category || ""
+        const limit = Number(req?.query?.limit) || 0
+        const skip = Number(req?.query?.skip) || 0
+
+
+        try {
+            let products = await Product.find({ product_category: { $elemMatch: { $regex: category, $options: 'i' } } }).limit(limit)
+
+            if (!skip === 0) {
+                const skipEnd = Number(skip) + 15
+                if (Number(skip) < products.length) {
+                    const skipProducts = products.slice(Number(skip), skipEnd)
+                    return res.json({
+                        "success": true,
+                        "message": "Product Retrieved",
+                        "data": skipProducts,
+                        "skip": `${skip} to ${skipEnd}`,
+                        "totalProductLength": products.length
+                    })
+                }
+
+                return res.json({
+                    "success": true,
+                    "message": "Product Retrieved",
+                    "data": products,
+                    "totalProductLength": products.length
+                })
+
+            }
+
+            return res.json({
+                "success": true,
+                "message": "Product Retrieved",
+                "data": products
+            })
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                "success": false,
+                "message": "Server Error!"
+            });
+
+        }
+    }
+
+
+
     //API : /api/v1/product/singleProduct
     //Method : get 
     //Access : Public

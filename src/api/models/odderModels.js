@@ -25,9 +25,14 @@ const odderSchema = new mongoose.Schema({
             product_images: String,
             product_price: Number
         }
-    ]
+    ],
+    order_status: {
+        type: String,
+        default: "panging"
 
-});
+    }
+
+}, { timestamps: true });
 
 const Odder = mongoose.model("odder", odderSchema)
 

@@ -45,13 +45,18 @@ odderCtrl.addNewOdder = async (req, res) => {
         }
 
         // save to database 
-        const result = await Odder.create(newOdderData, { upsert: true })
+        if (newOdderData?.products.length > 0) {
 
-        return res.status(200).json({
-            "success": true,
-            "message": "Odder successful!",
-            "result": result
-        });
+            console.log(newOdderData);
+
+            const result = await Odder.create(newOdderData, { upsert: true })
+
+            return res.status(200).json({
+                "success": true,
+                "message": "Odder successful!",
+                "result": result
+            });
+        }
 
 
     } catch (error) {

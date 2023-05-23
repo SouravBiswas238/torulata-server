@@ -10,6 +10,7 @@ router.route('/updateProduct/:productId').put(productCtrl.updateProduct);
 router.route('/deleteProduct/:productId').delete(productCtrl.deleteProducts);
 router.route('/fetchProducts').get(productCtrl.getProducts);
 router.route('/findManyById/:productArr').get(productCtrl.findManyById);
+router.route('/findByProductCategory').get(productCtrl.findProductBiCategory);
 
 router.route('/get-search-product/search').get(productCtrl.getSearchProduct);
 
