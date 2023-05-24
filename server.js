@@ -1,8 +1,5 @@
 import express from "express";
 import cors from "cors";
-import requestIp from 'request-ip'
-import geoip from 'geoip-lite'
-import useragent from 'useragent'
 
 import connectDB from "./src/config/db.js";
 import properties from './src/config/properties.js';
@@ -10,7 +7,6 @@ import productRouter from "./src/api/routes/ProductsRoute.js";
 import adminRouter from "./src/api/routes/adminsRoute.js";
 import odderRouter from "./src/api/routes/odderRoute.js";
 const port = properties.PORT;
-const serverUrl = properties.SERVER_URL;
 
 
 // connecting to database
@@ -27,7 +23,6 @@ var allowed_origins = [
 ];
 // express config
 const app = express();
-app.use(requestIp.mw());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(
@@ -44,18 +39,6 @@ app.use(
         credentials: true,
     })
 );
-app.use((req, res, next) => {
-    const ip = req.clientIp;
-    const geo = geoip.lookup(ip);
-    const agent = useragent.parse(req.headers['user-agent']);
-
-    req.ipAddress = ip;
-    req.deviceName = agent.device.toString();
-    req.location = geo;
-
-    next();
-});
-
 
 
 
@@ -75,5 +58,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Open in Browser : ${serverUrl}`);
+    console.log(`Open in Browser : ${port}`);
 });
