@@ -7,7 +7,6 @@ import productRouter from "./src/api/routes/ProductsRoute.js";
 import adminRouter from "./src/api/routes/adminsRoute.js";
 import odderRouter from "./src/api/routes/odderRoute.js";
 const port = properties.PORT;
-const serverUrl = properties.SERVER_URL;
 
 
 // connecting to database
@@ -58,5 +57,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Open in Browser : ${serverUrl}`);
+    console.log(`Open in Browser : ${port}`);
 });
