@@ -1,8 +1,5 @@
 import express from "express";
 import cors from "cors";
-import requestIp from 'request-ip'
-import geoip from 'geoip-lite'
-import useragent from 'useragent'
 
 import connectDB from "./src/config/db.js";
 import properties from './src/config/properties.js';
@@ -27,7 +24,6 @@ var allowed_origins = [
 ];
 // express config
 const app = express();
-app.use(requestIp.mw());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(
@@ -44,19 +40,6 @@ app.use(
         credentials: true,
     })
 );
-app.use((req, res, next) => {
-    const ip = req.clientIp;
-    const geo = geoip.lookup(ip);
-    const agent = useragent.parse(req.headers['user-agent']);
-
-    req.ipAddress = ip;
-    req.deviceName = agent.device.toString();
-    req.location = geo;
-
-    next();
-});
-
-
 
 
 try {
