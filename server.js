@@ -6,6 +6,7 @@ import properties from './src/config/properties.js';
 import productRouter from "./src/api/routes/ProductsRoute.js";
 import adminRouter from "./src/api/routes/adminsRoute.js";
 import odderRouter from "./src/api/routes/odderRoute.js";
+import bannerRouter from "./src/api/routes/bannerRoute.js";
 const port = properties.PORT;
 
 
@@ -51,6 +52,7 @@ try {
 app.use("/api/v1/product", productRouter);
 app.use("/admin", adminRouter);
 app.use("/odder", odderRouter)
+app.use("/banner", bannerRouter)
 
 
 app.get("/", (req, res) => {
