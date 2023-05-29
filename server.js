@@ -19,6 +19,7 @@ var allowed_origins = [
     "https://localhost:3002",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    process.env.NEW_ALLOWED_ORIGINS,
 
     "chrome-extension://pddljdmihkpdfpkgmbhdomeeifpklgnm",
 ];

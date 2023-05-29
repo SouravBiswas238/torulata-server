@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt');
 import bcrypt from "bcrypt"
 
 export default createHash = async (password) => {
