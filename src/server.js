@@ -1,11 +1,11 @@
 import express from "express";
 import cors from "cors";
 
-import connectDB from "./src/config/db.js";
-import properties from './src/config/properties.js';
-import productRouter from "./src/api/routes/ProductsRoute.js";
-import adminRouter from "./src/api/routes/adminsRoute.js";
-import odderRouter from "./src/api/routes/odderRoute.js";
+import connectDB from "./config/db.js";
+import properties from './config/properties.js';
+import productRouter from "./api/routes/ProductsRoute.js";
+import adminRouter from "./api/routes/adminsRoute.js";
+import odderRouter from "./api/routes/odderRoute.js";
 const port = properties.PORT;
 
 
