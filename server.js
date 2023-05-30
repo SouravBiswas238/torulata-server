@@ -6,6 +6,7 @@ import properties from './src/config/properties.js';
 import productRouter from "./src/api/routes/ProductsRoute.js";
 import adminRouter from "./src/api/routes/adminsRoute.js";
 import odderRouter from "./src/api/routes/odderRoute.js";
+import bannerRouter from "./src/api/routes/bannerRoute.js";
 const port = properties.PORT;
 
 
@@ -13,11 +14,14 @@ const port = properties.PORT;
 connectDB(properties.MONGO_URI);
 var allowed_origins = [
     "http://localhost:3001",
+
+    "http://localhost:3000",
     "http://localhost:3002",
     "https://localhost:3001",
     "https://localhost:3002",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    process.env.NEW_ALLOWED_ORIGINS,
 
     "chrome-extension://pddljdmihkpdfpkgmbhdomeeifpklgnm",
 ];
@@ -51,6 +55,7 @@ try {
 app.use("/api/v1/product", productRouter);
 app.use("/admin", adminRouter);
 app.use("/odder", odderRouter)
+app.use("/banner", bannerRouter)
 
 
 app.get("/", (req, res) => {

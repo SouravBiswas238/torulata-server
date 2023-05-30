@@ -152,14 +152,52 @@ adminCtrl.loginAdmin = async (req, res) => {
 }
 
 
+
+
+
+//API : /admin/login
+//Method : Get
+//Access : no access needed
+//Description : login admin
+adminCtrl.getAllAdmin = async (req, res) => {
+
+    try {
+
+        const allAdmin = await Admin.find().select({
+            password: 0,
+            mailVerifyHash: 0,
+            resetPasswordOTP: 0,
+            passwordRest: 0,
+            createdAt: 0,
+            updatedAt: 0,
+            __v: 0,
+        })
+        //admin login error
+        return res.status(200).json({
+            "success": true,
+            "message": "admin find successful",
+            "result": allAdmin
+        });
+
+
+    } catch (error) {
+        console.log("login admin", error.message);
+        return res.status(500).json({
+            "success": false,
+            "message": "internal server error!"
+        });
+    }
+}
+
+
 //API : /admin/login/access
 //Method : PUT
 //Access : admin access needed
 //Description : give admin login permission
 adminCtrl.giveAdminAccess = async (req, res) => {
-    const { email } = req?.body || {}
+    const { _id } = req?.body || {}
 
-    if (!email) {
+    if (!_id) {
         return res.status(400).json({
             "success": false,
             "message": "Invalid input!"
@@ -167,9 +205,8 @@ adminCtrl.giveAdminAccess = async (req, res) => {
     }
 
     try {
-        const { email } = req?.body || {}
         const options = { new: true }
-        const find = { email }
+        const find = { _id }
         const updateData = { isAdmin: true }
 
         const skipData = {
@@ -179,7 +216,7 @@ adminCtrl.giveAdminAccess = async (req, res) => {
             _id: 0,
         }
 
-        const result = await Admin.findOneAndUpdate(find, updateData, options).select(skipData)
+        const result = await Admin.findByIdAndUpdate(find, updateData, options).select(skipData)
 
         return res.status(200).json({
             "success": true,
@@ -202,9 +239,9 @@ adminCtrl.giveAdminAccess = async (req, res) => {
 //Access : admin access needed
 //Description : delete admin 
 adminCtrl.removeAdmin = async (req, res) => {
-    const { email } = req?.body || {}
+    const { _id } = req?.body || {}
 
-    if (!email) {
+    if (!_id) {
         return res.status(400).json({
             "success": false,
             "message": "Invalid input!"
@@ -212,8 +249,7 @@ adminCtrl.removeAdmin = async (req, res) => {
     }
 
     try {
-        const { email } = req?.body || {}
-        const find = { email }
+        const find = { _id }
 
         const result = await Admin.deleteOne(find)
 
