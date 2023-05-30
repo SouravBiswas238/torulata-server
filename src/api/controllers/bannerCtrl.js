@@ -9,16 +9,6 @@ let bannerCtrl = {}
 //Description : 
 bannerCtrl.addBanner = async (req, res) => {
 
-    const bodyObject = Object.keys(req.body);
-    bodyObject.forEach((singleKey) => {
-        if (!req.body[singleKey]) {
-            return res.status(400).json({
-                "success": false,
-                "message": "Invalid input!"
-            });
-        }
-    })
-
     try {
         const bannerUrl = req?.body?.url || {}
         const doc = { url: bannerUrl }

@@ -14,6 +14,8 @@ const port = properties.PORT;
 connectDB(properties.MONGO_URI);
 var allowed_origins = [
     "http://localhost:3001",
+
+    "http://localhost:3000",
     "http://localhost:3002",
     "https://localhost:3001",
     "https://localhost:3002",
