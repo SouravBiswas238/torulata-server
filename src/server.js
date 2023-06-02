@@ -1,12 +1,12 @@
-gitimport express from "express";
+import express from "express";
 import cors from "cors";
 
-import connectDB from "./src/config/db.js";
-import properties from './src/config/properties.js';
-import productRouter from "./src/api/routes/ProductsRoute.js";
-import adminRouter from "./src/api/routes/adminsRoute.js";
-import odderRouter from "./src/api/routes/odderRoute.js";
-import bannerRouter from "./src/api/routes/bannerRoute.js";
+import connectDB from "../src/config/db.js";
+import properties from '../src/config/properties.js';
+import productRouter from "../src/api/routes/ProductsRoute.js";
+import adminRouter from "../src/api/routes/adminsRoute.js";
+import odderRouter from "../src/api/routes/odderRoute.js";
+import bannerRouter from "../src/api/routes/bannerRoute.js";
 const port = properties.PORT;
 
 
@@ -21,11 +21,7 @@ var allowed_origins = [
     "https://localhost:3002",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-<<<<<<< HEAD:src/server.js
-    "https://torulata.com",
-=======
     process.env.NEW_ALLOWED_ORIGINS,
->>>>>>> 24a5ceebf9b3949ee6e71ace0d183ccd66f28450:server.js
 
     "chrome-extension://pddljdmihkpdfpkgmbhdomeeifpklgnm",
 ];
