@@ -12,7 +12,7 @@ var port = _properties["default"].PORT;
 
 // connecting to database
 (0, _db["default"])(_properties["default"].MONGO_URI);
-var allowed_origins = ["http://localhost:3001", "http://localhost:3002", "https://localhost:3001", "https://localhost:3002", "http://localhost:5173", "http://127.0.0.1:5173", "chrome-extension://pddljdmihkpdfpkgmbhdomeeifpklgnm"];
+var allowed_origins = ["http://localhost:3001", "http://localhost:3002", "https://localhost:3001", "https://localhost:3002", "http://localhost:5173", "http://127.0.0.1:5173", "https://torulata.com", "chrome-extension://pddljdmihkpdfpkgmbhdomeeifpklgnm"];
 // express config
 var app = (0, _express["default"])();
 app.use(_express["default"].urlencoded({
