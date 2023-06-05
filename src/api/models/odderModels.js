@@ -28,7 +28,7 @@ const odderSchema = new mongoose.Schema({
     ],
     order_status: {
         type: String,
-        default: "panging"
+        default: "pending"
 
     }
 

@@ -97,6 +97,43 @@ export default class odderCtrl {
 
 
     }
+
+
+
+    //API :update-order/:orderId/:status
+    //Method : put
+
+
+    updateOrder = async (req, res) => {
+        const { orderId, status } = req.params;
+
+        console.log(orderId)
+        try {
+
+            // Find the order by ID
+            const order = await Odder.findOne({ _id: orderId })
+            console.log(order)
+            if (!order) {
+                return res.status(404).json({ error: 'Order not found' });
+            }
+            // Update the order status
+            order.order_status = status;
+
+            // Save the updated order
+            await order.save();
+
+            return res.status(200).json({
+                "success": true,
+                "message": "Order status updated successfully",
+
+            });
+
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+
+    }
 }
 
 
