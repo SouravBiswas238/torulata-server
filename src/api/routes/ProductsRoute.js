@@ -15,6 +15,8 @@ router.route('/findByProductCategory').get(productCtrl.findProductBiCategory);
 router.route('/get-search-product/search').get(productCtrl.getSearchProduct);
 
 router.route('/singleProduct/:productId').get(productCtrl.getSingleProducts);
+// give a review
+router.route('/addReview/:productId').put(productCtrl.addReviewSingleProduct);
 router.route('/getSearchProduct/:search').get(productCtrl.getSearchProduct);
 
 

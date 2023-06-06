@@ -211,33 +211,79 @@ adminCtrl.loginAdmin = /*#__PURE__*/function () {
   };
 }();
 
+//API : /admin/login
+//Method : Get
+//Access : no access needed
+//Description : login admin
+adminCtrl.getAllAdmin = /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res) {
+    var allAdmin;
+    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+      while (1) switch (_context3.prev = _context3.next) {
+        case 0:
+          _context3.prev = 0;
+          _context3.next = 3;
+          return _adminsModels["default"].find().select({
+            password: 0,
+            mailVerifyHash: 0,
+            resetPasswordOTP: 0,
+            passwordRest: 0,
+            createdAt: 0,
+            updatedAt: 0,
+            __v: 0
+          });
+        case 3:
+          allAdmin = _context3.sent;
+          return _context3.abrupt("return", res.status(200).json({
+            "success": true,
+            "message": "admin find successful",
+            "result": allAdmin
+          }));
+        case 7:
+          _context3.prev = 7;
+          _context3.t0 = _context3["catch"](0);
+          console.log("login admin", _context3.t0.message);
+          return _context3.abrupt("return", res.status(500).json({
+            "success": false,
+            "message": "internal server error!"
+          }));
+        case 11:
+        case "end":
+          return _context3.stop();
+      }
+    }, _callee3, null, [[0, 7]]);
+  }));
+  return function (_x5, _x6) {
+    return _ref5.apply(this, arguments);
+  };
+}();
+
 //API : /admin/login/access
 //Method : PUT
 //Access : admin access needed
 //Description : give admin login permission
 adminCtrl.giveAdminAccess = /*#__PURE__*/function () {
-  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res) {
-    var _ref6, email, _ref7, _email, options, find, updateData, skipData, result;
-    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-      while (1) switch (_context3.prev = _context3.next) {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res) {
+    var _ref7, _id, options, find, updateData, skipData, result;
+    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+      while (1) switch (_context4.prev = _context4.next) {
         case 0:
-          _ref6 = (req === null || req === void 0 ? void 0 : req.body) || {}, email = _ref6.email;
-          if (email) {
-            _context3.next = 3;
+          _ref7 = (req === null || req === void 0 ? void 0 : req.body) || {}, _id = _ref7._id;
+          if (_id) {
+            _context4.next = 3;
             break;
           }
-          return _context3.abrupt("return", res.status(400).json({
+          return _context4.abrupt("return", res.status(400).json({
             "success": false,
             "message": "Invalid input!"
           }));
         case 3:
-          _context3.prev = 3;
-          _ref7 = (req === null || req === void 0 ? void 0 : req.body) || {}, _email = _ref7.email;
+          _context4.prev = 3;
           options = {
             "new": true
           };
           find = {
-            email: _email
+            _id: _id
           };
           updateData = {
             isAdmin: true
@@ -248,31 +294,31 @@ adminCtrl.giveAdminAccess = /*#__PURE__*/function () {
             __v: 0,
             _id: 0
           };
-          _context3.next = 11;
-          return _adminsModels["default"].findOneAndUpdate(find, updateData, options).select(skipData);
-        case 11:
-          result = _context3.sent;
-          return _context3.abrupt("return", res.status(200).json({
+          _context4.next = 10;
+          return _adminsModels["default"].findByIdAndUpdate(find, updateData, options).select(skipData);
+        case 10:
+          result = _context4.sent;
+          return _context4.abrupt("return", res.status(200).json({
             "success": true,
             "message": "Make admin successfully!",
             result: result
           }));
-        case 15:
-          _context3.prev = 15;
-          _context3.t0 = _context3["catch"](3);
-          console.log("give admin login permission", _context3.t0.message);
-          return _context3.abrupt("return", res.status(500).json({
+        case 14:
+          _context4.prev = 14;
+          _context4.t0 = _context4["catch"](3);
+          console.log("give admin login permission", _context4.t0.message);
+          return _context4.abrupt("return", res.status(500).json({
             "success": false,
             "message": "internal server error!"
           }));
-        case 19:
+        case 18:
         case "end":
-          return _context3.stop();
+          return _context4.stop();
       }
-    }, _callee3, null, [[3, 15]]);
+    }, _callee4, null, [[3, 14]]);
   }));
-  return function (_x5, _x6) {
-    return _ref5.apply(this, arguments);
+  return function (_x7, _x8) {
+    return _ref6.apply(this, arguments);
   };
 }();
 
@@ -281,60 +327,59 @@ adminCtrl.giveAdminAccess = /*#__PURE__*/function () {
 //Access : admin access needed
 //Description : delete admin 
 adminCtrl.removeAdmin = /*#__PURE__*/function () {
-  var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res) {
-    var _ref9, email, _ref10, _email2, find, result, _ref11, acknowledged, deletedCount;
-    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-      while (1) switch (_context4.prev = _context4.next) {
+  var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res) {
+    var _ref9, _id, find, result, _ref10, acknowledged, deletedCount;
+    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+      while (1) switch (_context5.prev = _context5.next) {
         case 0:
-          _ref9 = (req === null || req === void 0 ? void 0 : req.body) || {}, email = _ref9.email;
-          if (email) {
-            _context4.next = 3;
+          _ref9 = (req === null || req === void 0 ? void 0 : req.body) || {}, _id = _ref9._id;
+          if (_id) {
+            _context5.next = 3;
             break;
           }
-          return _context4.abrupt("return", res.status(400).json({
+          return _context5.abrupt("return", res.status(400).json({
             "success": false,
             "message": "Invalid input!"
           }));
         case 3:
-          _context4.prev = 3;
-          _ref10 = (req === null || req === void 0 ? void 0 : req.body) || {}, _email2 = _ref10.email;
+          _context5.prev = 3;
           find = {
-            email: _email2
+            _id: _id
           };
-          _context4.next = 8;
+          _context5.next = 7;
           return _adminsModels["default"].deleteOne(find);
-        case 8:
-          result = _context4.sent;
-          _ref11 = result || {}, acknowledged = _ref11.acknowledged, deletedCount = _ref11.deletedCount;
+        case 7:
+          result = _context5.sent;
+          _ref10 = result || {}, acknowledged = _ref10.acknowledged, deletedCount = _ref10.deletedCount;
           if (!(acknowledged && deletedCount)) {
-            _context4.next = 12;
+            _context5.next = 11;
             break;
           }
-          return _context4.abrupt("return", res.status(200).json({
+          return _context5.abrupt("return", res.status(200).json({
             "success": true,
             "message": "delete admin successful!",
             result: result
           }));
-        case 12:
-          return _context4.abrupt("return", res.status(404).json({
+        case 11:
+          return _context5.abrupt("return", res.status(404).json({
             "success": false,
             "message": "admin not exit!"
           }));
-        case 15:
-          _context4.prev = 15;
-          _context4.t0 = _context4["catch"](3);
-          console.log("remove admin", _context4.t0.message);
-          return _context4.abrupt("return", res.status(500).json({
+        case 14:
+          _context5.prev = 14;
+          _context5.t0 = _context5["catch"](3);
+          console.log("remove admin", _context5.t0.message);
+          return _context5.abrupt("return", res.status(500).json({
             "success": false,
             "message": "internal server error!"
           }));
-        case 19:
+        case 18:
         case "end":
-          return _context4.stop();
+          return _context5.stop();
       }
-    }, _callee4, null, [[3, 15]]);
+    }, _callee5, null, [[3, 14]]);
   }));
-  return function (_x7, _x8) {
+  return function (_x9, _x10) {
     return _ref8.apply(this, arguments);
   };
 }();
@@ -344,15 +389,15 @@ adminCtrl.removeAdmin = /*#__PURE__*/function () {
 //Access : no access needed
 //Description : email verify 
 adminCtrl.verifyEmail = /*#__PURE__*/function () {
-  var _ref12 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res) {
+  var _ref11 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res) {
     var _req$params;
     var mailVerifyHash, query, updateData, skipDataInResult, emailVerifyResult;
-    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-      while (1) switch (_context5.prev = _context5.next) {
+    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+      while (1) switch (_context6.prev = _context6.next) {
         case 0:
           mailVerifyHash = req === null || req === void 0 ? void 0 : (_req$params = req.params) === null || _req$params === void 0 ? void 0 : _req$params.hash;
           console.log("emailVerifyHash", mailVerifyHash);
-          _context5.prev = 2;
+          _context6.prev = 2;
           query = {
             mailVerifyHash: mailVerifyHash
           };
@@ -369,45 +414,45 @@ adminCtrl.verifyEmail = /*#__PURE__*/function () {
             updatedAt: 0,
             __v: 0
           };
-          _context5.next = 8;
+          _context6.next = 8;
           return _adminsModels["default"].findOneAndUpdate(query, updateData, {
             "new": true
           }).select(skipDataInResult);
         case 8:
-          emailVerifyResult = _context5.sent;
+          emailVerifyResult = _context6.sent;
           if (!(emailVerifyResult !== null)) {
-            _context5.next = 13;
+            _context6.next = 13;
             break;
           }
-          return _context5.abrupt("return", res.status(200).json({
+          return _context6.abrupt("return", res.status(200).json({
             "success": true,
             "message": "Email verify successful",
             result: emailVerifyResult
           }));
         case 13:
-          return _context5.abrupt("return", res.status(404).json({
+          return _context6.abrupt("return", res.status(404).json({
             "success": false,
             "message": "Op's Email verify failed!"
           }));
         case 14:
-          _context5.next = 20;
+          _context6.next = 20;
           break;
         case 16:
-          _context5.prev = 16;
-          _context5.t0 = _context5["catch"](2);
-          console.log("email-verify", _context5.t0.message);
-          return _context5.abrupt("return", res.status(500).json({
+          _context6.prev = 16;
+          _context6.t0 = _context6["catch"](2);
+          console.log("email-verify", _context6.t0.message);
+          return _context6.abrupt("return", res.status(500).json({
             "success": false,
             "message": "internal server error!"
           }));
         case 20:
         case "end":
-          return _context5.stop();
+          return _context6.stop();
       }
-    }, _callee5, null, [[2, 16]]);
+    }, _callee6, null, [[2, 16]]);
   }));
-  return function (_x9, _x10) {
-    return _ref12.apply(this, arguments);
+  return function (_x11, _x12) {
+    return _ref11.apply(this, arguments);
   };
 }();
 
@@ -416,12 +461,12 @@ adminCtrl.verifyEmail = /*#__PURE__*/function () {
 //Access : no access needed
 //Description : password reset email sent
 adminCtrl.passwordResetMailSent = /*#__PURE__*/function () {
-  var _ref13 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(req, res) {
+  var _ref12 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(req, res) {
     var _req$body4, resetPassEmail, OTP, find, resetPasswordOTP, options, result;
-    return _regeneratorRuntime().wrap(function _callee7$(_context7) {
-      while (1) switch (_context7.prev = _context7.next) {
+    return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+      while (1) switch (_context8.prev = _context8.next) {
         case 0:
-          _context7.prev = 0;
+          _context8.prev = 0;
           resetPassEmail = req === null || req === void 0 ? void 0 : (_req$body4 = req.body) === null || _req$body4 === void 0 ? void 0 : _req$body4.email;
           console.log(resetPassEmail);
 
@@ -436,58 +481,58 @@ adminCtrl.passwordResetMailSent = /*#__PURE__*/function () {
           options = {
             "new": true
           }; // check valid admin  
-          _context7.next = 9;
+          _context8.next = 9;
           return _adminsModels["default"].findOneAndUpdate(find, resetPasswordOTP, options);
         case 9:
-          result = _context7.sent;
+          result = _context8.sent;
           if (!(result !== null)) {
-            _context7.next = 15;
+            _context8.next = 15;
             break;
           }
-          _context7.next = 13;
+          _context8.next = 13;
           return (0, _sentEmail["default"])(resetPassEmail, (0, _resetMailFormate["default"])(OTP));
         case 13:
           // password validity time 5 minute
-          setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
-            return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-              while (1) switch (_context6.prev = _context6.next) {
+          setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
+            return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+              while (1) switch (_context7.prev = _context7.next) {
                 case 0:
-                  _context6.next = 2;
+                  _context7.next = 2;
                   return _adminsModels["default"].findOneAndUpdate(find, {
                     resetPasswordOTP: null
                   });
                 case 2:
                 case "end":
-                  return _context6.stop();
+                  return _context7.stop();
               }
-            }, _callee6);
+            }, _callee7);
           })), 300000);
-          return _context7.abrupt("return", res.status(200).json({
+          return _context8.abrupt("return", res.status(200).json({
             "success": true,
             "message": "Reset mail sent",
             "exp": "5 minute"
           }));
         case 15:
-          return _context7.abrupt("return", res.status(404).json({
+          return _context8.abrupt("return", res.status(404).json({
             "success": false,
             "message": "Wrong email try again"
           }));
         case 18:
-          _context7.prev = 18;
-          _context7.t0 = _context7["catch"](0);
-          console.log("password reset || ", _context7.t0.message);
-          return _context7.abrupt("return", res.status(500).json({
+          _context8.prev = 18;
+          _context8.t0 = _context8["catch"](0);
+          console.log("password reset || ", _context8.t0.message);
+          return _context8.abrupt("return", res.status(500).json({
             "success": false,
             "message": "internal server error!"
           }));
         case 22:
         case "end":
-          return _context7.stop();
+          return _context8.stop();
       }
-    }, _callee7, null, [[0, 18]]);
+    }, _callee8, null, [[0, 18]]);
   }));
-  return function (_x11, _x12) {
-    return _ref13.apply(this, arguments);
+  return function (_x13, _x14) {
+    return _ref12.apply(this, arguments);
   };
 }();
 
@@ -496,25 +541,25 @@ adminCtrl.passwordResetMailSent = /*#__PURE__*/function () {
 //Access : no access needed
 //Description : password reset email verify
 adminCtrl.passwordResetMailVerify = /*#__PURE__*/function () {
-  var _ref15 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(req, res) {
-    var _ref16, email, otp, findAdmin;
-    return _regeneratorRuntime().wrap(function _callee8$(_context8) {
-      while (1) switch (_context8.prev = _context8.next) {
+  var _ref14 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(req, res) {
+    var _ref15, email, otp, findAdmin;
+    return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+      while (1) switch (_context9.prev = _context9.next) {
         case 0:
-          _context8.prev = 0;
-          _ref16 = (req === null || req === void 0 ? void 0 : req.params) || {}, email = _ref16.email, otp = _ref16.otp;
-          _context8.next = 4;
+          _context9.prev = 0;
+          _ref15 = (req === null || req === void 0 ? void 0 : req.params) || {}, email = _ref15.email, otp = _ref15.otp;
+          _context9.next = 4;
           return _adminsModels["default"].findOne({
             email: email
           });
         case 4:
-          findAdmin = _context8.sent;
+          findAdmin = _context9.sent;
           console.log(findAdmin);
           if (!(findAdmin !== null && otp == (findAdmin === null || findAdmin === void 0 ? void 0 : findAdmin.resetPasswordOTP))) {
-            _context8.next = 12;
+            _context9.next = 12;
             break;
           }
-          _context8.next = 9;
+          _context9.next = 9;
           return _adminsModels["default"].findOneAndUpdate({
             email: email
           }, {
@@ -522,37 +567,37 @@ adminCtrl.passwordResetMailVerify = /*#__PURE__*/function () {
             passwordRest: true
           });
         case 9:
-          return _context8.abrupt("return", res.status(200).json({
+          return _context9.abrupt("return", res.status(200).json({
             "success": true,
             "message": "otp is valid",
             "email": email
           }));
         case 12:
-          return _context8.abrupt("return", res.status(404).json({
+          return _context9.abrupt("return", res.status(404).json({
             "success": false,
             "message": "OTP time expired"
           }));
         case 13:
-          return _context8.abrupt("return", res.status(404).json({
+          return _context9.abrupt("return", res.status(404).json({
             "success": false,
             "message": "something wrong"
           }));
         case 16:
-          _context8.prev = 16;
-          _context8.t0 = _context8["catch"](0);
-          console.log("otp verify || ", _context8.t0.message);
-          return _context8.abrupt("return", res.status(500).json({
+          _context9.prev = 16;
+          _context9.t0 = _context9["catch"](0);
+          console.log("otp verify || ", _context9.t0.message);
+          return _context9.abrupt("return", res.status(500).json({
             "success": false,
             "message": "internal server error!"
           }));
         case 20:
         case "end":
-          return _context8.stop();
+          return _context9.stop();
       }
-    }, _callee8, null, [[0, 16]]);
+    }, _callee9, null, [[0, 16]]);
   }));
-  return function (_x13, _x14) {
-    return _ref15.apply(this, arguments);
+  return function (_x15, _x16) {
+    return _ref14.apply(this, arguments);
   };
 }();
 
@@ -561,28 +606,28 @@ adminCtrl.passwordResetMailVerify = /*#__PURE__*/function () {
 //Access : no access needed
 //Description : password update
 adminCtrl.passwordUpdate = /*#__PURE__*/function () {
-  var _ref17 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(req, res) {
+  var _ref16 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee10(req, res) {
     var _req$body5, password, email, hash, findAdmin;
-    return _regeneratorRuntime().wrap(function _callee9$(_context9) {
-      while (1) switch (_context9.prev = _context9.next) {
+    return _regeneratorRuntime().wrap(function _callee10$(_context10) {
+      while (1) switch (_context10.prev = _context10.next) {
         case 0:
-          _context9.prev = 0;
+          _context10.prev = 0;
           _req$body5 = req === null || req === void 0 ? void 0 : req.body, password = _req$body5.password, email = _req$body5.email;
-          _context9.next = 4;
+          _context10.next = 4;
           return _bcrypt["default"].hash(password, saltRounds);
         case 4:
-          hash = _context9.sent;
-          _context9.next = 7;
+          hash = _context10.sent;
+          _context10.next = 7;
           return _adminsModels["default"].findOne({
             email: email
           });
         case 7:
-          findAdmin = _context9.sent;
+          findAdmin = _context10.sent;
           if (!(findAdmin !== null && findAdmin !== null && findAdmin !== void 0 && findAdmin.passwordRest)) {
-            _context9.next = 12;
+            _context10.next = 12;
             break;
           }
-          _context9.next = 11;
+          _context10.next = 11;
           return _adminsModels["default"].findOneAndUpdate({
             email: email
           }, {
@@ -590,30 +635,30 @@ adminCtrl.passwordUpdate = /*#__PURE__*/function () {
             passwordRest: false
           });
         case 11:
-          return _context9.abrupt("return", res.status(200).json({
+          return _context10.abrupt("return", res.status(200).json({
             "success": true,
             "message": "update password successful"
           }));
         case 12:
-          return _context9.abrupt("return", res.status(500).json({
+          return _context10.abrupt("return", res.status(500).json({
             "success": false,
             "message": "smutting is wrong"
           }));
         case 15:
-          _context9.prev = 15;
-          _context9.t0 = _context9["catch"](0);
-          return _context9.abrupt("return", res.status(500).json({
+          _context10.prev = 15;
+          _context10.t0 = _context10["catch"](0);
+          return _context10.abrupt("return", res.status(500).json({
             "success": false,
             "message": "internal server error!"
           }));
         case 18:
         case "end":
-          return _context9.stop();
+          return _context10.stop();
       }
-    }, _callee9, null, [[0, 15]]);
+    }, _callee10, null, [[0, 15]]);
   }));
-  return function (_x15, _x16) {
-    return _ref17.apply(this, arguments);
+  return function (_x17, _x18) {
+    return _ref16.apply(this, arguments);
   };
 }();
 var _default = adminCtrl;

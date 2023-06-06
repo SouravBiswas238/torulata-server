@@ -11,7 +11,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 var router = _express["default"].Router();
 router.route('/login').patch(_adminCtrl["default"].loginAdmin);
 router.route('/register').post(_adminCtrl["default"].rgeAdmin);
-router.route('/remove')["delete"](_jwtVerify["default"], _adminCtrl["default"].removeAdmin);
+router.route('/all-admin').get(_adminCtrl["default"].getAllAdmin);
+router.route('/remove')["delete"](_adminCtrl["default"].removeAdmin);
 router.route('/email-verify/:hash').patch(_adminCtrl["default"].verifyEmail);
 router.route('/password-update').patch(_adminCtrl["default"].passwordUpdate);
 router.route('/give-admin-access').patch(_adminCtrl["default"].giveAdminAccess);
