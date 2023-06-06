@@ -12,10 +12,12 @@ router.route('/fetchProducts').get(productCtrl.getProducts);
 router.route('/findManyById/:productArr').get(productCtrl.findManyById);
 router.route('/findByProductCategory').get(productCtrl.findProductBiCategory);
 
-router.route('/getSearchProduct/search').get(productCtrl.getSearchProduct);
-
 router.route('/singleProduct/:productId').get(productCtrl.getSingleProducts);
-router.route('/getSearchProduct/:search').get(productCtrl.getSearchProduct);
+
+
+
+
+router.route('/get-search-product/search').get(productCtrl.getSearchProduct);
 
 
 
