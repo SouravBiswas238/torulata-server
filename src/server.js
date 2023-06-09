@@ -1,12 +1,12 @@
 import express from "express";
 import cors from "cors";
 
-import connectDB from "./src/config/db.js";
-import properties from './src/config/properties.js';
-import productRouter from "./src/api/routes/ProductsRoute.js";
-import adminRouter from "./src/api/routes/adminsRoute.js";
-import odderRouter from "./src/api/routes/odderRoute.js";
-import bannerRouter from "./src/api/routes/bannerRoute.js";
+import connectDB from "../src/config/db.js";
+import properties from '../src/config/properties.js';
+import productRouter from "../src/api/routes/ProductsRoute.js";
+import adminRouter from "../src/api/routes/adminsRoute.js";
+import odderRouter from "../src/api/routes/odderRoute.js";
+import bannerRouter from "../src/api/routes/bannerRoute.js";
 const port = properties.PORT;
 
 
@@ -43,7 +43,6 @@ app.use(
         credentials: true,
     })
 );
-
 
 
 try {
