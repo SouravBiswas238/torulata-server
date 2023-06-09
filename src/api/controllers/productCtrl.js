@@ -329,6 +329,12 @@ export default class ProductCtrl {
                 }
                 : {};
 
+            // const searchProduct = await Product.find(keyword);
+            // res.status(200).json({
+            //     "success": true,
+            //     "message": "successful",
+            //     "data": searchProduct
+            // });
             const products = await Product.find(keyword);
 
             // Extract tag names from the product tags
@@ -341,8 +347,11 @@ export default class ProductCtrl {
                     product_tags_bangla: banglaTagNames,
                 };
             });
-
-            res.send(productsWithTags);
+            res.status(200).json({
+                "success": true,
+                "message": "successful",
+                "data": productsWithTags
+            });
         } catch (error) {
             console.log(error);
             return res.status(500).json({
