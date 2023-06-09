@@ -9,7 +9,6 @@ import odderRouter from "./api/routes/odderRoute.js";
 import bannerRouter from "./api/routes/bannerRoute.js";
 const port = properties.PORT;
 
-
 // connecting to database
 connectDB(properties.MONGO_URI);
 var allowed_origins = [
@@ -43,7 +42,6 @@ app.use(
         credentials: true,
     })
 );
-
 
 
 try {
