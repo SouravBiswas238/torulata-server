@@ -97,6 +97,38 @@ export default class odderCtrl {
 
 
     }
+    //API : /singleOdder/
+    //Method : get
+    //Access : no access
+    //Description : get single order
+    getSingleOdder = async (req, res) => {
+
+        try {
+            const OrderId = req.params.orderId;
+            // console.log(OrderId);
+            if (!OrderId) {
+                return res.json({
+                    message: 'product Id not receive'
+                })
+            }
+            let SingleData = await Odder.findOne({ _id: OrderId })
+            return res.status(200).json({
+                "success": true,
+                "message": "get single odder data",
+                data: SingleData
+            });
+
+
+        } catch (error) {
+            console.log(error?.message);
+            return res.status(500).json({
+                "success": false,
+                "message": "internal server error  t!"
+            });
+        }
+
+
+    }
 
 
 
