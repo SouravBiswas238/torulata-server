@@ -7,6 +7,7 @@ import productRouter from "./api/routes/ProductsRoute.js";
 import adminRouter from "./api/routes/adminsRoute.js";
 import odderRouter from "./api/routes/odderRoute.js";
 import bannerRouter from "./api/routes/bannerRoute.js";
+import userRouter from "./api/routes/userRoute.js";
 const port = properties.PORT;
 
 // connecting to database
@@ -52,6 +53,7 @@ try {
 }
 
 app.use("/api/v1/product", productRouter);
+app.use("/user", userRouter);
 app.use("/admin", adminRouter);
 app.use("/odder", odderRouter)
 app.use("/banner", bannerRouter)
