@@ -10,10 +10,11 @@ export default class userControl {
         let { user_id,
             user_name,
             user_email,
-            user_image } = req.body;
+            user_image } = req.body.payload;
+
         // @ts-ignore
-    
-        if (!user_id || !user_name || !user_email) {
+
+        if (!user_id || !user_email) {
             return res.status(400).json({
                 "success": false,
                 "message": "Invalid input!"
