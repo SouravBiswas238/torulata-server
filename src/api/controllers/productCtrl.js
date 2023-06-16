@@ -97,7 +97,7 @@ export default class ProductCtrl {
 
 
     updateProduct = async (req, res) => {
-        // console.log(req.body)
+        let productId = req.params.productId;
         const { product_title, product_price, product_category, product_discount, product_images, product_info, product_tags_english, product_tags_bangla } = req.body;
 
         if (!product_title || !product_price || !product_category || !product_images || !product_info || !product_tags_english || !product_tags_bangla) {
@@ -108,8 +108,7 @@ export default class ProductCtrl {
         }
 
         try {
-            const updatedProduct = await Product.findByIdAndUpdate(
-                productId,
+            const updatedProduct = await Product.findByIdAndUpdate(productId,
                 {
                     product_title: product_title,
                     product_discount: product_discount,

@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-
 import connectDB from "./config/db.js";
 import properties from './config/properties.js';
 import productRouter from "./api/routes/ProductsRoute.js";
