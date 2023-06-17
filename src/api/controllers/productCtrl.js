@@ -176,23 +176,23 @@ export default class ProductCtrl {
     getRelatedProduct = async (req, res) => {
         const category = req.query.category.split(',');
         console.log(category);
+        let relatedProduct = []
         try {
             let products = await Product.find({})
             const result = products.map(p => {
                 const includesResult = category.some((kw) => p.product_category.includes(kw))
                 console.log(includesResult);
-                if (includesResult) {
-                    return p
-                }
-                else {
+                if (includesResult == false) {
                     return
+                } if (includesResult) {
+                    relatedProduct.push(p)
                 }
             })
 
             return res.status(200).json({
                 "success": true,
                 "message": "Product Retrieved",
-                "data": result
+                "data": relatedProduct.slice(0, 4)
             })
         } catch (error) {
             console.log(error)
