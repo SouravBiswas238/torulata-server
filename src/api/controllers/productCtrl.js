@@ -178,9 +178,9 @@ export default class ProductCtrl {
         let relatedProduct = []
         try {
             let products = await Product.find({})
-            const result = products.map(p => {
+            products.map(p => {
                 const includesResult = category.some((kw) => p.product_category.includes(kw))
-                console.log(includesResult);
+                // console.log(includesResult);
                 if (includesResult == false) {
                     return
                 } if (includesResult) {
@@ -251,6 +251,8 @@ export default class ProductCtrl {
         try {
             let products = await Product.find({ product_category: { $elemMatch: { $regex: category, $options: 'i' } } }).limit(limit)
 
+            let productsLength = (await Product.find({})).length
+
             if (!skip === 0) {
                 const skipEnd = Number(skip) + 15
                 if (Number(skip) < products.length) {
@@ -260,7 +262,7 @@ export default class ProductCtrl {
                         "message": "Product Retrieved",
                         "data": skipProducts,
                         "skip": `${skip} to ${skipEnd}`,
-                        "totalProductLength": products.length
+                        "totalProductLength": productsLength
                     })
                 }
 
@@ -268,7 +270,7 @@ export default class ProductCtrl {
                     "success": true,
                     "message": "Product Retrieved",
                     "data": products,
-                    "totalProductLength": products.length
+                    "totalProductLength": productsLength
                 })
 
             }
@@ -276,7 +278,8 @@ export default class ProductCtrl {
             return res.json({
                 "success": true,
                 "message": "Product Retrieved",
-                "data": products
+                "data": products,
+                "totalProductLength": productsLength
             })
         } catch (error) {
             console.log(error)
