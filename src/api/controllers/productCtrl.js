@@ -1,4 +1,5 @@
 import Product from "../models/productModels.js";
+import Review from "../models/reviewModel.js";
 
 export default class ProductCtrl {
     //API : /api/v1/product/addProduct
@@ -44,10 +45,59 @@ export default class ProductCtrl {
         }
     }
 
+    //API : /api/v1/product/addProduct
+    //Method : PUT
+    //Access : Public
+    //Description :for adding a review
+    addReviewSingleProduct = async (req, res) => {
+        const { product_review, user_name, rating_star } = req.body || {};
+        const productId = req.params.productId;
+        // console.log(req.body, productId)
+
+
+        if (!productId || !product_review || !user_name || !rating_star) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid input!"
+            });
+        }
+
+        try {
+            const updatedProduct = await Review.findByIdAndUpdate(
+                productId,
+                {
+                    $push: {
+                        product_review: { name: user_name, review: product_review, rating_star: rating_star }
+                    }
+                },
+                { upsert: true, new: true }
+            );
+
+            if (!updatedProduct) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Product not found"
+                });
+            }
+
+            return res.json({
+                success: true,
+                message: "Review updated",
+                product: updatedProduct
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                success: false,
+                message: "Server Error!"
+            });
+        }
+    }
+
+
 
     updateProduct = async (req, res) => {
-        console.log(req.body)
-        const productId = req.params.productId;
+        // console.log(req.body)
         const { product_title, product_price, product_category, product_discount, product_images, product_info, product_tags_english, product_tags_bangla } = req.body;
 
         if (!product_title || !product_price || !product_category || !product_images || !product_info || !product_tags_english || !product_tags_bangla) {
@@ -62,7 +112,6 @@ export default class ProductCtrl {
                 productId,
                 {
                     product_title: product_title,
-
                     product_discount: product_discount,
                     product_price: product_price,
                     product_category: product_category,
@@ -213,14 +262,17 @@ export default class ProductCtrl {
             const productId = req.params.productId;
             if (!productId) {
                 return res.json({
-                    message: 'product Id not recive'
+                    message: 'product Id not receive'
                 })
             }
             let product = await Product.findOne({ _id: productId })
+            let reviews = await Review.findOne({ _id: productId })
             return res.json({
                 "success": true,
-                "message": "Product Retrived",
-                "data": product
+                "message": "Product Received",
+                "data": product,
+                "reviews": reviews
+
             })
         } catch (error) {
             console.log(error)
@@ -277,6 +329,12 @@ export default class ProductCtrl {
                 }
                 : {};
 
+            // const searchProduct = await Product.find(keyword);
+            // res.status(200).json({
+            //     "success": true,
+            //     "message": "successful",
+            //     "data": searchProduct
+            // });
             const products = await Product.find(keyword);
 
             // Extract tag names from the product tags
@@ -289,8 +347,11 @@ export default class ProductCtrl {
                     product_tags_bangla: banglaTagNames,
                 };
             });
-
-            res.send(productsWithTags);
+            res.status(200).json({
+                "success": true,
+                "message": "successful",
+                "data": productsWithTags
+            });
         } catch (error) {
             console.log(error);
             return res.status(500).json({
