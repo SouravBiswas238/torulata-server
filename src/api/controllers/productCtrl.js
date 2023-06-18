@@ -166,6 +166,45 @@ export default class ProductCtrl {
 
         }
     }
+
+
+    //API : /api/v1/product/related-product
+    //Method : get
+    //Access : Public
+    //Description :for fetching the product
+
+    getRelatedProduct = async (req, res) => {
+        const category = req.query.category.split(',');
+        console.log(category);
+        let relatedProduct = []
+        try {
+            let products = await Product.find({})
+            const result = products.map(p => {
+                const includesResult = category.some((kw) => p.product_category.includes(kw))
+                console.log(includesResult);
+                if (includesResult == false) {
+                    return
+                } if (includesResult) {
+                    relatedProduct.push(p)
+                }
+            })
+
+            return res.status(200).json({
+                "success": true,
+                "message": "Product Retrieved",
+                "data": relatedProduct.slice(0, 4)
+            })
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                "success": false,
+                "message": "Server Error!"
+            });
+
+        }
+    }
+
+
     //API : /api/v1/product/findManyById
     //Method : get
     //Access : Public
@@ -271,7 +310,7 @@ export default class ProductCtrl {
                 "success": true,
                 "message": "Product Received",
                 "data": product,
-                "reviews": reviews
+                "reviews": reviews || []
 
             })
         } catch (error) {
