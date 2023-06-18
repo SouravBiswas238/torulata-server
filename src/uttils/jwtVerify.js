@@ -15,6 +15,13 @@ const jwtVerify = async (req, res, next) => {
     try {
         const authorizationToken = authorization.split(" ")[1]
         const decoded = jwt.verify(authorizationToken, process.env.SECRET_HASH)
+
+        if (!decoded) {
+            return res.status(401).json({
+                "success": false,
+                "message": "Unauthorized Access!",
+            });
+        }
         req.decoded = decoded;
         next()
         return
