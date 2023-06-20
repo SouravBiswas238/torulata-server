@@ -7,9 +7,7 @@ export default class ProductCtrl {
     //Access : Public
     //Description :for adding the product
     addProduct = async (req, res) => {
-
         let { product_title, product_price, product_care, product_category, product_discount, product_images, product_info, product_tags_english, product_tags_bangla, } = req.body;
-        // @ts-ignore
 
         if (!product_title || !product_price || !product_care || !product_category || !product_images || !product_info, !product_tags_english, !product_tags_bangla) {
             return res.status(400).json({
@@ -243,53 +241,47 @@ export default class ProductCtrl {
     //Description :for fetching Many product by id
 
     findProductBiCategory = async (req, res) => {
-        const category = req?.query?.category || ""
-        const limit = Number(req?.query?.limit) || 0
-        const skip = Number(req?.query?.skip) || 0
-
+        const category = req?.query?.category || "";
+        const limit = Number(req?.query?.limit) || 0;
+        const skip = Number(req?.query?.skip) || 0;
 
         try {
-            let products = await Product.find({ product_category: { $elemMatch: { $regex: category, $options: 'i' } } }).limit(limit)
+            let products = await Product.find({
+                product_category: { $elemMatch: { $regex: category, $options: 'i' } }
+            })
+                .sort({ 'product_info.priority': 1 })
+                .limit(limit);
 
-            let productsLength = (await Product.find({})).length
+            let productsLength = (await Product.find({})).length;
 
-            if (!skip === 0) {
-                const skipEnd = Number(skip) + 15
-                if (Number(skip) < products.length) {
-                    const skipProducts = products.slice(Number(skip), skipEnd)
+            if (skip !== 0) {
+                const skipEnd = skip + 15;
+                if (skip < products.length) {
+                    const skipProducts = products.slice(skip, skipEnd);
                     return res.json({
-                        "success": true,
-                        "message": "Product Retrieved",
-                        "data": skipProducts,
-                        "skip": `${skip} to ${skipEnd}`,
-                        "totalProductLength": productsLength
-                    })
+                        success: true,
+                        message: 'Product Retrieved',
+                        data: skipProducts,
+                        skip: `${skip} to ${skipEnd}`,
+                        totalProductLength: productsLength
+                    });
                 }
-
-                return res.json({
-                    "success": true,
-                    "message": "Product Retrieved",
-                    "data": products,
-                    "totalProductLength": productsLength
-                })
-
             }
 
             return res.json({
-                "success": true,
-                "message": "Product Retrieved",
-                "data": products,
-                "totalProductLength": productsLength
-            })
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json({
-                "success": false,
-                "message": "Server Error!"
+                success: true,
+                message: 'Product Retrieved',
+                data: products,
+                totalProductLength: productsLength
             });
-
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                success: false,
+                message: 'Server Error!'
+            });
         }
-    }
+    };
 
 
 
