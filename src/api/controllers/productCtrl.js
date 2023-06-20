@@ -188,10 +188,22 @@ export default class ProductCtrl {
                 }
             })
 
+            const randomValues = [];
+            const length = relatedProduct.length;
+
+            while (randomValues.length < 4) {
+                const randomIndex = Math.floor(Math.random() * length);
+                const randomValue = relatedProduct[randomIndex];
+
+                if (!randomValues.includes(randomValue)) {
+                    randomValues.push(randomValue);
+                }
+            }
+
             return res.status(200).json({
                 "success": true,
                 "message": "Product Retrieved",
-                "data": relatedProduct.slice(0, 4)
+                "data": randomValues
             })
         } catch (error) {
             console.log(error)
