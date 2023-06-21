@@ -6,21 +6,23 @@ export default class userControl {
     //Access : Public
     //Description :for creating account
     createUser = async (req, res) => {
+        let { user_id, user_name, user_email, user_image } = req.body.payload;
 
-        let { user_id,
-            user_name,
-            user_email,
-            user_image } = req.body;
-        // @ts-ignore
-    
-        if (!user_id || !user_name || !user_email) {
+        if (!user_id || !user_email) {
             return res.status(400).json({
-                "success": false,
-                "message": "Invalid input!"
+                success: false,
+                message: 'Invalid input!',
             });
         }
 
         try {
+            const existingUser = await User.findOne({ user_id: user_id });
+            if (existingUser) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'User with the provided user_id already exists!',
+                });
+            }
             let newUser = await User.create({
                 user_id: user_id,
                 user_name: user_name,
@@ -28,19 +30,24 @@ export default class userControl {
                 user_image: user_image,
             });
             return res.json({
-                "success": true,
-                "message": "User Creates",
-                "userId": newUser._id
+                success: true,
+                message: 'User Created',
+                userId: newUser._id,
             });
-
         } catch (error) {
-            console.log(error)
+            console.log(error);
+            if (error.code === 11000) { // Duplicate key error
+                return res.status(400).json({
+                    success: false,
+                    message: 'User ID must be unique.',
+                });
+            }
             return res.status(500).json({
-                "success": false,
-                "message": "Server Error!"
+                success: false,
+                message: 'Server Error!',
             });
         }
-    }
+    };
     //API : /user/get-all
     //Method : get
     //Access : Public

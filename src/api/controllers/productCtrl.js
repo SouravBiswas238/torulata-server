@@ -172,7 +172,7 @@ export default class ProductCtrl {
 
     getRelatedProduct = async (req, res) => {
         const category = req.query.category.split(',');
-        console.log(category);
+        // console.log(category);
         let relatedProduct = []
         try {
             let products = await Product.find({})
@@ -202,6 +202,30 @@ export default class ProductCtrl {
                 "success": true,
                 "message": "Product Retrieved",
                 "data": randomValues
+            })
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                "success": false,
+                "message": "Server Error!"
+            });
+
+        }
+    }
+
+    //API : /api/v1/product/hot-product
+    //Method : get
+    //Access : Public
+    //Description :for fetching the product
+
+    getHotProducts = async (req, res) => {
+
+        try {
+            let products = await Product.find({"product_info.priority": 3})
+            return res.status(200).json({
+                "success": true,
+                "message": "Product Retrieved",
+                "data": products
             })
         } catch (error) {
             console.log(error)
@@ -330,7 +354,7 @@ export default class ProductCtrl {
     }
 
 
-    // search product  get search result by query {sourav}
+    // search product  get search result by query 
     //API : /api/v1/product/singleProduct
     //Method : get 
     //Access : Public
