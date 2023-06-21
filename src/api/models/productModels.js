@@ -21,6 +21,10 @@ const productSchema = new mongoose.Schema({
             type: String,
             required: true
         },
+        priority: {
+            type: Number,
+            required: true
+        },
         product_care: {
             type: String,
             required: true
