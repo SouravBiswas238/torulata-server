@@ -6,9 +6,11 @@ export default class userControl {
     //Access : Public
     //Description :for creating account
     createUser = async (req, res) => {
-        let { user_id, user_name, user_email, user_image } = req.body.payload;
+        let { user_name, user_email, user_password, user_id, user_photo } = req.body;
 
-        if (!user_id || !user_email) {
+        console.log(req.body)
+
+        if (!user_email && user_id) {
             return res.status(400).json({
                 success: false,
                 message: 'Invalid input!',
@@ -16,32 +18,31 @@ export default class userControl {
         }
 
         try {
-            const existingUser = await User.findOne({ user_id: user_id });
+            const existingUser = await User.findOne({ user_email: user_email });
             if (existingUser) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'User with the provided user_id already exists!',
+                return res.status(200).json({
+                    success: true,
+                    message: 'User with the provided Email already exists!',
                 });
             }
-            let newUser = await User.create({
+
+
+            await User.create({
                 user_id: user_id,
                 user_name: user_name,
                 user_email: user_email,
-                user_image: user_image,
+                user_password: user_password,
+                user_photo: user_photo
+
             });
             return res.json({
                 success: true,
                 message: 'User Created',
-                userId: newUser._id,
+
             });
         } catch (error) {
             console.log(error);
-            if (error.code === 11000) { // Duplicate key error
-                return res.status(400).json({
-                    success: false,
-                    message: 'User ID must be unique.',
-                });
-            }
+
             return res.status(500).json({
                 success: false,
                 message: 'Server Error!',

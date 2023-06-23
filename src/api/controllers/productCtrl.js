@@ -221,7 +221,7 @@ export default class ProductCtrl {
     getHotProducts = async (req, res) => {
 
         try {
-            let products = await Product.find({"product_info.priority": 3})
+            const products = await Product.find({ product_category: "Hot" });
             return res.status(200).json({
                 "success": true,
                 "message": "Product Retrieved",
