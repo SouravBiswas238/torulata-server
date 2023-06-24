@@ -6,6 +6,7 @@ import productRouter from "./api/routes/ProductsRoute.js";
 import adminRouter from "./api/routes/adminsRoute.js";
 import odderRouter from "./api/routes/odderRoute.js";
 import bannerRouter from "./api/routes/bannerRoute.js";
+import contactRouter from "./api/routes/contactRoute.js";
 import userRouter from "./api/routes/userRoute.js";
 const port = properties.PORT;
 
@@ -55,6 +56,7 @@ app.use("/api/v1/product", productRouter);
 app.use("/user", userRouter);
 app.use("/admin", adminRouter);
 app.use("/odder", odderRouter)
+app.use("/contact", contactRouter)
 app.use("/banner", bannerRouter)
 
 

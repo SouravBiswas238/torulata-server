@@ -70,8 +70,6 @@ export default class odderCtrl {
     }
 
 
-
-
     //API : /odder/
     //Method : POST
     //Access : no access
@@ -139,7 +137,7 @@ export default class odderCtrl {
     updateOrder = async (req, res) => {
         const { orderId, status } = req.params;
 
-        console.log(orderId)
+        // console.log(orderId)
         try {
 
             // Find the order by ID
